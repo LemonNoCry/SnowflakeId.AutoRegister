@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister", "src\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj", "{379A07C8-D3D6-4B54-976A-CD964283AD6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{80C12689-8B1F-4738-9D7C-180DF84D0DC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD77DB3C-AB49-4515-875F-BAFDBF6C73B7}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		Directory.Build.props = Directory.Build.props
+		LICENSE.txt = LICENSE.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{32DD7F02-1B46-43B3-A869-4877C8D8EC73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.StackExchangeRedis", "src\SnowflakeId.AutoRegister.StackExchangeRedis\SnowflakeId.AutoRegister.StackExchangeRedis.csproj", "{FB31B4F1-76B0-4CB3-9680-E3E356D83844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Tests.Redis", "test\SnowflakeId.AutoRegister.Tests.Redis\SnowflakeId.AutoRegister.Tests.Redis.csproj", "{74A9D2D6-693B-45BA-BFC2-B821193B9535}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Tests", "test\SnowflakeId.AutoRegister.Tests\SnowflakeId.AutoRegister.Tests.csproj", "{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{97ACBBF1-EB80-4C34-8483-BF78B89B94EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.SqlServer", "src\SnowflakeId.AutoRegister.SqlServer\SnowflakeId.AutoRegister.SqlServer.csproj", "{5F4A1935-6BA2-42D6-9223-579739E9DDCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Tests.SqlServer", "test\SnowflakeId.AutoRegister.Tests.SqlServer\SnowflakeId.AutoRegister.Tests.SqlServer.csproj", "{DA7700C6-7158-472E-90D8-C6306C627450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yitter.IdGenerator.AutoRegister", "examples\Yitter.IdGenerator.AutoRegister\Yitter.IdGenerator.AutoRegister.csproj", "{925E07ED-4CFD-488D-8528-355CA93CB8DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yitter.IdGenerator.AutoRegister.AspCore", "examples\Yitter.IdGenerator.AutoRegister.AspCore\Yitter.IdGenerator.AutoRegister.AspCore.csproj", "{5B4EB001-5AB8-40CE-A013-50C99C522430}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{379A07C8-D3D6-4B54-976A-CD964283AD6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{379A07C8-D3D6-4B54-976A-CD964283AD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{379A07C8-D3D6-4B54-976A-CD964283AD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{379A07C8-D3D6-4B54-976A-CD964283AD6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB31B4F1-76B0-4CB3-9680-E3E356D83844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB31B4F1-76B0-4CB3-9680-E3E356D83844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB31B4F1-76B0-4CB3-9680-E3E356D83844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB31B4F1-76B0-4CB3-9680-E3E356D83844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74A9D2D6-693B-45BA-BFC2-B821193B9535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74A9D2D6-693B-45BA-BFC2-B821193B9535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74A9D2D6-693B-45BA-BFC2-B821193B9535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74A9D2D6-693B-45BA-BFC2-B821193B9535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F4A1935-6BA2-42D6-9223-579739E9DDCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F4A1935-6BA2-42D6-9223-579739E9DDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F4A1935-6BA2-42D6-9223-579739E9DDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F4A1935-6BA2-42D6-9223-579739E9DDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA7700C6-7158-472E-90D8-C6306C627450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA7700C6-7158-472E-90D8-C6306C627450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA7700C6-7158-472E-90D8-C6306C627450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA7700C6-7158-472E-90D8-C6306C627450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{925E07ED-4CFD-488D-8528-355CA93CB8DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{925E07ED-4CFD-488D-8528-355CA93CB8DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{925E07ED-4CFD-488D-8528-355CA93CB8DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{925E07ED-4CFD-488D-8528-355CA93CB8DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{379A07C8-D3D6-4B54-976A-CD964283AD6E} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
+		{FB31B4F1-76B0-4CB3-9680-E3E356D83844} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
+		{74A9D2D6-693B-45BA-BFC2-B821193B9535} = {32DD7F02-1B46-43B3-A869-4877C8D8EC73}
+		{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F} = {32DD7F02-1B46-43B3-A869-4877C8D8EC73}
+		{5F4A1935-6BA2-42D6-9223-579739E9DDCC} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
+		{DA7700C6-7158-472E-90D8-C6306C627450} = {32DD7F02-1B46-43B3-A869-4877C8D8EC73}
+		{925E07ED-4CFD-488D-8528-355CA93CB8DD} = {97ACBBF1-EB80-4C34-8483-BF78B89B94EB}
+		{5B4EB001-5AB8-40CE-A013-50C99C522430} = {97ACBBF1-EB80-4C34-8483-BF78B89B94EB}
+	EndGlobalSection
+EndGlobal

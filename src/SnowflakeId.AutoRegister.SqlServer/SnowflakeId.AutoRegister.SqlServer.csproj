@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.1.35" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Snowflake.SqlServer.Install.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Snowflake.Migrate.SqlServer.sql" />
+      <EmbeddedResource Include="Resources\Snowflake.Migrate.SqlServer.sql" />
+    </ItemGroup>
+
+</Project>
