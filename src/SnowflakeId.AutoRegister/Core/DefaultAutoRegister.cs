@@ -106,11 +106,15 @@ internal class DefaultAutoRegister : IAutoRegister
                 return;
             }
 
+            // First stop the task, then delete the cache
+            // Avoid extending the time again in the task after deleting the Cache first
+            ExtendLifeTimeTask?.Stop();
+
             Storage.Delete(WorkerIdFormat(SnowflakeIdConfig.WorkerId));
             Storage.Delete(Identifier);
 
             SnowflakeIdConfig = null;
-            ExtendLifeTimeTask?.Stop();
+            ExtendLifeTimeTask = null;
         }
     }
 
