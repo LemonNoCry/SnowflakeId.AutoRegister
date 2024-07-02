@@ -3,11 +3,8 @@
     <PropertyGroup>
         <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister</PackageTags>
         <Version>1.0.0</Version>
-        <Description>SnowflakeId AutoRegister is a versatile C# library that provides an implementation of the SnowflakeId AutoRegister system. It currently supports SQL Server and Redis as storage mechanisms, with plans to support more in the future. The library can be integrated with any framework that utilizes SnowflakeId, making it a flexible solution for generating unique IDs across various platforms and technologies.</Description>
+        <Description>A C# library for automatic registration of WorkerId in SnowflakeId systems,supporting SQL Server, Redis , and other.
+        </Description>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0"/>
-    </ItemGroup>
 
 </Project>

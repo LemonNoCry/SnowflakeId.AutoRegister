@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines a storage mechanism for the SnowflakeId AutoRegister system.
 /// </summary>
-public interface IStorage : IDisposable, IAsyncDisposable
+public interface IStorage : IDisposable
 {
     bool Exist(string key);
 

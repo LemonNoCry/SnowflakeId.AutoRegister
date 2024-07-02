@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines an interface for automatic registration.
 /// </summary>
-public interface IAutoRegister : IDisposable, IAsyncDisposable
+public interface IAutoRegister : IDisposable
 {
     /// <summary>
     /// Register a SnowflakeIdConfig.

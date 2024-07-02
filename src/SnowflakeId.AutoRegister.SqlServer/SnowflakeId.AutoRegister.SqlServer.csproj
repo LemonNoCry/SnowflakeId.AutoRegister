@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="Dapper" Version="2.1.35" />
+      <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
       <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
     </ItemGroup>
 

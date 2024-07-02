@@ -98,7 +98,7 @@ public class BaseAutoRegister
         // dispose all
         foreach (var register in registers)
         {
-            await register.DisposeAsync();
+             register.Dispose();
         }
 
         // check all keys are expired

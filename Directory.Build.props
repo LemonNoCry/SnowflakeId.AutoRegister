@@ -4,8 +4,23 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
+        <SlnDir>$(MSBuildThisFileDirectory)</SlnDir>
 
         <Authors>LemonNoCry</Authors>
-        <Copyright>Copyright © LemonNoCry 2024 </Copyright>
+        <Copyright>Copyright © LemonNoCry 2024</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/LemonNoCry/SnowflakeId.AutoRegister</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/LemonNoCry/SnowflakeId.AutoRegister</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- Include symbol files (*.pdb) in the built .nupkg -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(SlnDir)README.md" Pack="true" PackagePath="\" Visible="false"/>
+    </ItemGroup>
 </Project>

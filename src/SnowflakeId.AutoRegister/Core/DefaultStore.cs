@@ -49,11 +49,5 @@ public class DefaultStore : IStorage
         _store.Clear();
     }
 
-    public ValueTask DisposeAsync()
-    {
-        Dispose();
-        return default;
-    }
-
     #endregion
 }

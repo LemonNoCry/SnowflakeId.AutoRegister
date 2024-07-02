@@ -191,17 +191,5 @@ internal class DefaultAutoRegister : IAutoRegister
         GC.SuppressFinalize(this);
     }
 
-    protected virtual ValueTask DisposeAsyncCore()
-    {
-        UnRegister();
-        return default;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await DisposeAsyncCore();
-        GC.SuppressFinalize(this);
-    }
-
     #endregion
 }
