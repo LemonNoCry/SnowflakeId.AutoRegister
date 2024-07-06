@@ -20,6 +20,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Tests", "test\SnowflakeId.AutoRegister.Tests\SnowflakeId.AutoRegister.Tests.csproj", "{F6CC22FF-2422-4AC4-B6DF-F33C1C7B053F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{97ACBBF1-EB80-4C34-8483-BF78B89B94EB}"
+	ProjectSection(SolutionItems) = preProject
+		examples\Directory.Build.props = examples\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.SqlServer", "src\SnowflakeId.AutoRegister.SqlServer\SnowflakeId.AutoRegister.SqlServer.csproj", "{5F4A1935-6BA2-42D6-9223-579739E9DDCC}"
 EndProject
@@ -28,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yitter.IdGenerator.AutoRegister", "examples\Yitter.IdGenerator.AutoRegister\Yitter.IdGenerator.AutoRegister.csproj", "{925E07ED-4CFD-488D-8528-355CA93CB8DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yitter.IdGenerator.AutoRegister.AspCore", "examples\Yitter.IdGenerator.AutoRegister.AspCore\Yitter.IdGenerator.AutoRegister.AspCore.csproj", "{5B4EB001-5AB8-40CE-A013-50C99C522430}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yitter.IdGenerator.Fx.AutoRegister", "examples\Yitter.IdGenerator.Fx.AutoRegister\Yitter.IdGenerator.Fx.AutoRegister.csproj", "{A34CF5D4-CB1D-46D5-B5D2-ADB2D1A799DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +72,10 @@ Global
 		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B4EB001-5AB8-40CE-A013-50C99C522430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A34CF5D4-CB1D-46D5-B5D2-ADB2D1A799DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A34CF5D4-CB1D-46D5-B5D2-ADB2D1A799DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A34CF5D4-CB1D-46D5-B5D2-ADB2D1A799DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A34CF5D4-CB1D-46D5-B5D2-ADB2D1A799DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{379A07C8-D3D6-4B54-976A-CD964283AD6E} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
@@ -77,5 +86,6 @@ Global
 		{DA7700C6-7158-472E-90D8-C6306C627450} = {32DD7F02-1B46-43B3-A869-4877C8D8EC73}
 		{925E07ED-4CFD-488D-8528-355CA93CB8DD} = {97ACBBF1-EB80-4C34-8483-BF78B89B94EB}
 		{5B4EB001-5AB8-40CE-A013-50C99C522430} = {97ACBBF1-EB80-4C34-8483-BF78B89B94EB}
+		{A34CF5D4-CB1D-46D5-B5D2-ADB2D1A799DE} = {97ACBBF1-EB80-4C34-8483-BF78B89B94EB}
 	EndGlobalSection
 EndGlobal

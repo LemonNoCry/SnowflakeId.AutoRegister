@@ -1,26 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-
+        <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+        <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister;SqlServer</PackageTags>
+        <Version>1.0.1</Version>
+        <Description>SnowflakeId AutoRegister StackExchangeRedis: An extension of the SnowflakeId AutoRegister library, enabling automatic WorkerId registration in SnowflakeId systems using SqlServer
+        </Description>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj" />
+        <ProjectReference Include="..\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Dapper" Version="2.1.35" />
-      <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
+        <PackageReference Include="Dapper" Version="2.1.35" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="3.1.5" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Snowflake.SqlServer.Install.sql" />
+        <None Remove="Resources\Snowflake.SqlServer.Install.sql" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Snowflake.Migrate.SqlServer.sql" />
-      <EmbeddedResource Include="Resources\Snowflake.Migrate.SqlServer.sql" />
+        <None Remove="Resources\Snowflake.Migrate.SqlServer.sql" />
+        <EmbeddedResource Include="Resources\Snowflake.Migrate.SqlServer.sql" />
     </ItemGroup>
 
 </Project>
