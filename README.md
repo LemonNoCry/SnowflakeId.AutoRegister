@@ -3,7 +3,7 @@
 [![Latest version](https://img.shields.io/nuget/v/SnowflakeId.AutoRegister.svg?label=nuget)](https://www.nuget.org/packages/SnowflakeId.AutoRegister) [![License LGPLv3](https://img.shields.io/badge/license-MIT-blue)](https://choosealicense.com/licenses/mit/) [![Coverity Scan](https://scan.coverity.com/projects/30455/badge.svg)](https://scan.coverity.com/projects/lemonnocry-snowflakeid-autoregister)
 
 这是一个自动注册 SnowflakeId 的 WorkerId 的 C# 库，支持 SQL Server、Redis 等。  
-它本身不提供 SnowflakeId 的生成功能，只帮助你自动注册 WorkerIdn。  
+它本身不提供 SnowflakeId 的生成功能，只帮助你自动注册 WorkerId。  
 理论上，SnowflakeId AutoRegister 可以与任何使用 SnowflakeId 的库集成。
 
 - [简体中文](README.md)
@@ -59,7 +59,7 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     // .SetRegisterOption(option => {})
 
     // 使用以下行使用默认存储。
-    // 仅适用于独立使用、本地测试等。
+    // 仅适用于开发使用、本地测试等。
     //.UseDefaultStore()
         
     // 使用以下行使用 Redis 存储。
@@ -76,6 +76,29 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
 // 注册 WorkerId。
 SnowflakeIdConfig config = AutoRegister.Register();
 Console.WriteLine($"WorkerId: {config.WorkerId}");
+```
+
+程序退出主动卸载 WorkerId。
+
+```csharp
+//主动注销WorkId,程序退出时调用
+//如果程序异常退出，下次启动时会自动尝试获取上次的WorkerId,如果获取失败会重新注册
+AutoRegister.UnRegister();
+
+//可以使用AppDomain.CurrentDomain.ProcessExit事件
+AppDomain.CurrentDomain.ProcessExit += (_, _) =>
+{
+    builder.UnRegister();
+    Console.WriteLine("Unregistered.");
+};
+
+//.Net Core及以上版本可以使用ApplicationStopping事件
+applicationLifetime.ApplicationStopping.Register(() =>
+{
+    builder.UnRegister();
+    Console.WriteLine("Unregistered.");
+});
+
 ```
 
 ### Yitter.IdGenerator 自动注册

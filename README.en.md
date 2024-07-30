@@ -79,6 +79,31 @@ SnowflakeIdConfig config = AutoRegister.Register();
 Console.WriteLine($"WorkerId: {config.WorkerId}");
 ```
 
+Actively unload WorkerId when the program exits.
+
+```csharp
+// Actively unregister WorkerId, call this when the program exits
+// If the program exits unexpectedly, it will automatically attempt to retrieve the previous WorkerId on the next startup.
+// If retrieval fails, it will register a new one
+AutoRegister.UnRegister();
+
+// You can use the AppDomain.CurrentDomain.ProcessExit event
+AppDomain.CurrentDomain.ProcessExit += (_, _) =>
+{
+    builder.UnRegister();
+    Console.WriteLine("Unregistered.");
+};
+
+// For .NET Core and later versions, you can use the ApplicationStopping event
+applicationLifetime.ApplicationStopping.Register(() =>
+{
+    builder.UnRegister();
+    Console.WriteLine("Unregistered.");
+});
+
+```
+
+
 #### Yitter.IdGenerator AutoRegister
 
 ```csharp
