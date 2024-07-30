@@ -1,82 +1,84 @@
-# SnowflakeId AutoRegister
+# Snowflake Id(雪花Id) 自动注册
+
 [![Latest version](https://img.shields.io/nuget/v/SnowflakeId.AutoRegister.svg?label=nuget)](https://www.nuget.org/packages/SnowflakeId.AutoRegister) [![License LGPLv3](https://img.shields.io/badge/license-MIT-blue)](https://choosealicense.com/licenses/mit/) [![Coverity Scan](https://scan.coverity.com/projects/30455/badge.svg)](https://scan.coverity.com/projects/lemonnocry-snowflakeid-autoregister)
 
-Is a C# library for automatic registration of WorkerId in SnowflakeId systems,
-supporting SQL Server, Redis , and other.  
-Itself does not provide the generation of Snowflake Id, it only helps you to automatically register WorkerId.  
-In theory, SnowflakeId AutoRegister can be integrated with any framework that utilizes SnowflakeId
+这是一个自动注册 SnowflakeId 的 WorkerId 的 C# 库，支持 SQL Server、Redis 等。  
+它本身不提供 SnowflakeId 的生成功能，只帮助你自动注册 WorkerIdn。  
+理论上，SnowflakeId AutoRegister 可以与任何使用 SnowflakeId 的库集成。
 
-## Getting Started
+- [简体中文](README.md)
+- [English](README.en.md)
 
-SnowflakeId AutoRegister is a library that provides a simple way to automatically register WorkerId in SnowflakeId
-systems.  
-Itself does not provide the generation of Snowflake Id, it only helps you to automatically register WorkerId.
+## 入门指南
 
-### Prerequisites
+SnowflakeId AutoRegister 是一个库，提供了一种简单的方法在 SnowflakeId 中自动注册 WorkerId。  
+它本身不生成 Snowflake Id，只帮助你自动注册 WorkerId。
+
+### 核心
 
 - .NETStandard 2.0
-- Support Redis
-- Support SQL Server
-- More storage mechanisms will be supported in future updates
+- 支持 Redis
+- 支持 SQL Server
+- 未来更新将支持更多存储机制
 
-### Installation
+### 安装
 
-SnowflakeId.AutoRegister is available as a NuGet package. You can install it using the NuGet Package Console window:
+SnowflakeId.AutoRegister 作为 NuGet 包提供。你可以使用 NuGet 包管理控制台安装它：
 
-Install the core package
+#### 安装核心包
 
 ```bash
 Install-Package SnowflakeId.AutoRegister
 ```
 
-Use Redis
+#### 使用 Redis
 
 ```bash
 Install-Package SnowflakeId.AutoRegister.Redis
 ```
 
-Use SqlServer
+#### 使用 SqlServer
 
 ```bash
 Install-Package SnowflakeId.AutoRegister.SqlServer
 ```
 
-### Usage
+### 使用方法
 
-Use the `AutoRegisterBuilder` to create a singleton instance of `IAutoRegister`.
+使用 AutoRegisterBuilder 构建 IAutoRegister 的单例实例。
 
 ```csharp
 static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
-    // Register Option
-    // Use the following line to set the identifier.
-    // Recommended setting to distinguish multiple applications on a single machine
-   .SetExtraIdentifier(Environment.CurrentDirectory)
-    // Use the following line to set the WorkerId scope.
-   .SetWorkerIdScope(1, 31)
-    // Use the following line to set the register option.
+    // 注册选项
+    // 使用以下行设置标识符。
+    // 推荐设置以区分单台机器上的多个应用程序
+    .SetExtraIdentifier(Environment.CurrentDirectory)
+    // 使用以下行设置 WorkerId 范围。
+    .SetWorkerIdScope(1, 31)
+    // 使用以下行设置注册选项。
     // .SetRegisterOption(option => {})
 
-    // Use the following line to use the default store.
-    // Only suitable for standalone use, local testing, etc.
+    // 使用以下行使用默认存储。
+    // 仅适用于独立使用、本地测试等。
     //.UseDefaultStore()
         
-    // Use the following line to use the Redis store.
+    // 使用以下行使用 Redis 存储。
     .UseRedisStore("localhost:6379,allowAdmin=true")
        
-    // Use the following line to use the SQL Server store.
+    // 使用以下行使用 SQL Server 存储。
     //.UseSqlServerStore("Server=localhost;Database=IdGenerator;User Id=sa;Password=123456;")
-    Build();
+    .Build();
 ```
 
-Use the `AutoRegister` instance to get the SnowflakeIdConfig.
+使用 `AutoRegister` 实例获取 `SnowflakeIdConfig`。
 
 ```csharp
-// Use Register WorkerId.
+// 注册 WorkerId。
 SnowflakeIdConfig config = AutoRegister.Register();
 Console.WriteLine($"WorkerId: {config.WorkerId}");
 ```
 
-#### Yitter.IdGenerator AutoRegister
+### Yitter.IdGenerator 自动注册
 
 ```csharp
 var config = AutoRegister.Register();
@@ -89,42 +91,42 @@ long id = idGenInstance.NewLong();
 Console.WriteLine($"Id: {id}");
 ```
 
-### Other AutoRegister
+### 其他自动注册
 
-For other Snowflake ID generation libraries, please refer to the Yitter.IdGenerator Demo.
+对于其他 Snowflake ID 生成库，请参考 Yitter.IdGenerator 示例。
 
-## Building the sources
+## 构建源码
 
-Clone the repository:
+克隆仓库：
 
 ```bash
 git clone https://github.com/LemonNoCry/SnowflakeId.AutoRegister.git
 ```
 
-Navigate to the project directory:
+导航到项目目录：
 
 ```bash
 cd SnowflakeId.AutoRegister 
 ```
 
-Restore the packages:
+恢复包：
 
 ```bash 
 dotnet restore 
 ```
 
-Build the project:
+构建项目：
 
 ```bash
 dotnet build
 ```
 
-## Contributing
+## 贡献
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-Please make sure to update tests as appropriate.
+欢迎提交拉取请求。如果有重大更改，请先打开一个 Issue 讨论你想要更改的内容。
+请确保适当更新测试。
 
-## License
+## 许可证
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
