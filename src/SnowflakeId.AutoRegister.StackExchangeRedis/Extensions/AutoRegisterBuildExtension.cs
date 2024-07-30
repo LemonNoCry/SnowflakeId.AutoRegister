@@ -4,7 +4,7 @@ using SnowflakeId.AutoRegister.StackExchangeRedis.Storage;
 // ReSharper disable once CheckNamespace
 namespace SnowflakeId.AutoRegister.Builder;
 
-public static partial class AutoRegisterBuildExtension
+public static class AutoRegisterBuildExtension
 {
     /// <summary>
     /// Configures the AutoRegisterBuilder to use Redis as the storage mechanism.

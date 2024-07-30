@@ -16,6 +16,7 @@ public class SnowflakeController : ControllerBase
     [HttpGet]
     public long Get()
     {
+        _logger.LogInformation("Get SnowflakeId : {Id}", IdGeneratorUtil.NextId());
         return IdGeneratorUtil.NextId();
     }
 }

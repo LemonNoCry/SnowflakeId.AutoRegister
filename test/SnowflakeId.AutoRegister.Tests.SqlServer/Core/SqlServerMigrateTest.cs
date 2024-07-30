@@ -1,7 +1,5 @@
-﻿using JetBrains.Annotations;
-using SnowflakeId.AutoRegister.SqlServer.Core;
+﻿using SnowflakeId.AutoRegister.SqlServer.Core;
 using SnowflakeId.AutoRegister.SqlServer.Resources;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace SnowflakeId.AutoRegister.Tests.SqlServer.Core;

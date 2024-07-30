@@ -1,5 +1,4 @@
-﻿using SnowflakeId.AutoRegister.Core;
-using SnowflakeId.AutoRegister.Interfaces;
+﻿using SnowflakeId.AutoRegister.Interfaces;
 
 namespace SnowflakeId.AutoRegister.Tests.Base;
 

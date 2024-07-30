@@ -32,7 +32,7 @@ public static class IdGeneratorUtil
            .Build();
 
         // Unregister on process exit
-        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
         {
             // Unregister the SnowflakeIdConfig.
             builder.UnRegister();

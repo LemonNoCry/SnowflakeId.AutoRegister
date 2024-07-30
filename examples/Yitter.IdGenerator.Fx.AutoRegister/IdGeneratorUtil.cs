@@ -14,7 +14,7 @@ public static class IdGeneratorUtil
         var builder = new AutoRegisterBuilder()
             // Register Option
             // Use the following line to set the identifier.
-            // Recommended setting to distinguish multiple applications on a single machine
+            // Recommended setting to distinguish multiple applications on a single machine.
            .SetExtraIdentifier(Environment.CurrentDirectory)
             // Use the following line to set the WorkerId scope.
            .SetWorkerIdScope(1, 31)
@@ -33,7 +33,7 @@ public static class IdGeneratorUtil
            .Build();
 
         // Unregister on process exit
-        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
         {
             // Unregister the SnowflakeIdConfig.
             builder.UnRegister();
