@@ -1,4 +1,6 @@
-﻿namespace Yitter.IdGenerator.AutoRegister.AspCore;
+﻿// ReSharper disable NullableWarningSuppressionIsUsed
+
+namespace Yitter.IdGenerator.AutoRegister.AspCore;
 
 public class App
 {

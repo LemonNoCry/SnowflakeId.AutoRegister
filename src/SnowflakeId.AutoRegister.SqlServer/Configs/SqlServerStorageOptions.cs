@@ -12,7 +12,7 @@ public class SqlServerStorageOptions
     /// <summary>
     /// Gets or sets the connection string used to connect to the SQL Server database.
     /// </summary>
-    public string ConnectionString { get; set; } = null!;
+    public string ConnectionString { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the name of the schema in the SQL Server database.

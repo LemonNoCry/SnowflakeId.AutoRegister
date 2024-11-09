@@ -13,5 +13,5 @@ public class SnowflakeIdConfig
     /// <summary>
     /// Gets the identifier for the SnowflakeId.
     /// </summary>
-    public string Identifier { get; internal set; } = null!;
+    public string Identifier { get; internal set; } = string.Empty;
 }

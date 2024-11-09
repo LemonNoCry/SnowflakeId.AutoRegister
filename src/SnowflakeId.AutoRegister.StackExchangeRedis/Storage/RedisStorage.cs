@@ -7,8 +7,8 @@ namespace SnowflakeId.AutoRegister.StackExchangeRedis.Storage;
 /// </summary>
 internal class RedisStorage : IStorage
 {
-    private readonly RedisStorageOption _storageOption;
     private readonly IConnectionMultiplexer _connection;
+    private readonly RedisStorageOption _storageOption;
 
     internal RedisStorage(RedisStorageOption storageOption)
     {
@@ -17,15 +17,11 @@ internal class RedisStorage : IStorage
             throw new ArgumentNullException(nameof(storageOption));
         }
 
-        if (storageOption.ConfigurationOptions is null && storageOption.ConnectionMultiplexerFactory is null)
-        {
-            throw new ArgumentNullException(nameof(storageOption.ConfigurationOptions));
-        }
-
         storageOption.InstanceName ??= RedisStorageOption.DefaultInstanceName;
 
         _storageOption = storageOption;
-        _connection = storageOption.ConnectionMultiplexerFactory?.Invoke() ?? ConnectionMultiplexer.Connect(storageOption.ConfigurationOptions!);
+        _connection = storageOption.ConnectionMultiplexerFactory?.Invoke() ?? ConnectionMultiplexer.Connect(storageOption.ConfigurationOptions ??
+            throw new ArgumentNullException(nameof(storageOption.ConfigurationOptions)));
     }
 
     public bool Exist(string key)

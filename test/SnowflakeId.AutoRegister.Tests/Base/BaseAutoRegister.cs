@@ -4,7 +4,12 @@ namespace SnowflakeId.AutoRegister.Tests.Base;
 
 public class BaseAutoRegister
 {
-    protected Func<AutoRegisterBuilder, AutoRegisterBuilder> SetRegisterBuild = null!;
+    protected Func<AutoRegisterBuilder, AutoRegisterBuilder> SetRegisterBuild;
+
+    protected BaseAutoRegister()
+    {
+        SetRegisterBuild = builder => builder;
+    }
 
     protected AutoRegisterBuilder GetAutoRegisterBuilder(AutoRegisterBuilder? builder = null)
     {
@@ -20,7 +25,7 @@ public class BaseAutoRegister
     protected virtual async Task Test_StorageAsync()
     {
         var builder = GetAutoRegisterBuilder();
-        var storage = builder.Storage!;
+        var storage = builder.Storage;
 
         Assert.NotNull(storage);
 
@@ -64,7 +69,7 @@ public class BaseAutoRegister
 
     protected virtual async Task Test_MultipleConcurrentRegistrations()
     {
-        IStorage storage = null!;
+        IStorage? storage = null;
         var registers = new IAutoRegister[10];
         var tasks = new Task<SnowflakeIdConfig>[10];
 
@@ -72,7 +77,7 @@ public class BaseAutoRegister
         {
             var currentIndex = i;
             var builder = GetAutoRegisterBuilder();
-            storage = builder.Storage!;
+            storage = builder.Storage;
             var idAutoRegister = builder
                 // Set the extra identifier to the current index
                .SetRegisterOption(option => { option.ExtraIdentifier = currentIndex.ToString(); })
@@ -97,13 +102,13 @@ public class BaseAutoRegister
         // dispose all
         foreach (var register in registers)
         {
-             register.Dispose();
+            register.Dispose();
         }
 
         // check all keys are expired
         foreach (var task in tasks)
         {
-            var flag = storage.Exist($@"WorkerId:{task.Result.WorkerId}");
+            var flag = storage?.Exist($@"WorkerId:{task.Result.WorkerId}");
             Assert.False(flag);
         }
     }
@@ -111,7 +116,7 @@ public class BaseAutoRegister
     protected virtual void Test_WorkerId_Own()
     {
         var builder = GetAutoRegisterBuilder();
-        var storage = builder.Storage!;
+        var storage = builder.Storage;
         using var register = GetAutoRegister(builder);
         var idConfig = register.Register();
 
@@ -120,18 +125,18 @@ public class BaseAutoRegister
         Assert.NotEmpty(idConfig.Identifier);
 
         // Get the worker id
-        var workerId = storage.Get(idConfig.Identifier);
+        var workerId = storage?.Get(idConfig.Identifier);
         Assert.Equal(idConfig.WorkerId.ToString(), workerId);
 
         // Get the identifier
-        var identifier = storage.Get("WorkerId:" + idConfig.WorkerId);
+        var identifier = storage?.Get("WorkerId:" + idConfig.WorkerId);
         Assert.Equal(idConfig.Identifier, identifier);
     }
 
     protected virtual void Test_WorkerId_Expired()
     {
         var builder = GetAutoRegisterBuilder();
-        var storage = builder.Storage!;
+        var storage = builder.Storage;
         using var register = builder
            .SetRegisterOption(option => option.WorkerIdLifeMillisecond = 100)
            .Build();
@@ -142,22 +147,22 @@ public class BaseAutoRegister
         Assert.NotEmpty(idConfig.Identifier);
 
         // Get the worker id
-        var workerId = storage.Get(idConfig.Identifier);
+        var workerId = storage?.Get(idConfig.Identifier);
         Assert.Equal(idConfig.WorkerId.ToString(), workerId);
 
         // Get the identifier
-        var identifier = storage.Get("WorkerId:" + idConfig.WorkerId);
+        var identifier = storage?.Get("WorkerId:" + idConfig.WorkerId);
         Assert.Equal(idConfig.Identifier, identifier);
 
         // Sleep for a while to expire the worker id
         Thread.Sleep(100);
 
         // Get the worker id
-        workerId = storage.Get(idConfig.Identifier);
+        workerId = storage?.Get(idConfig.Identifier);
         Assert.NotNull(workerId);
 
         // Get the identifier from redis
-        identifier = storage.Get("WorkerId:" + idConfig.WorkerId);
+        identifier = storage?.Get("WorkerId:" + idConfig.WorkerId);
         Assert.NotNull(identifier);
     }
 }
