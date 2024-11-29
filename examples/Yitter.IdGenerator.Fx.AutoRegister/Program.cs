@@ -8,6 +8,7 @@ namespace Yitter.IdGenerator.Fx.AutoRegister
         {
             Console.WriteLine("Hello, World!");
             Console.WriteLine("New Id:" + IdGeneratorUtil.NextId());
+            Console.ReadKey();
         }
     }
 }

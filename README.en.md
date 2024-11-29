@@ -54,6 +54,10 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     // Use the following line to set the identifier.
     // Recommended setting to distinguish multiple applications on a single machine
    .SetExtraIdentifier(Environment.CurrentDirectory)
+   
+    // Distinguish between multiple processes with the same path exe
+    // .SetExtraIdentifier(Environment.CurrentDirectory + Process.GetCurrentProcess().Id)
+   
     // Use the following line to set the WorkerId scope.
    .SetWorkerIdScope(1, 31)
     // Use the following line to set the register option.

@@ -53,6 +53,10 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     // 使用以下行设置标识符。
     // 推荐设置以区分单台机器上的多个应用程序
     .SetExtraIdentifier(Environment.CurrentDirectory)
+    
+    // 区分同路径exe,多个进程
+    // .SetExtraIdentifier(Environment.CurrentDirectory + Process.GetCurrentProcess().Id)S
+    
     // 使用以下行设置 WorkerId 范围。
     .SetWorkerIdScope(1, 31)
     // 使用以下行设置注册选项。
