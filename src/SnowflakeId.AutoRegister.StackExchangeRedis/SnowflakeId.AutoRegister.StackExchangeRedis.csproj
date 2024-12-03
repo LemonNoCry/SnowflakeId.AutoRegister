@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister;StackExchange.Redis;Redis</PackageTags>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Description>SnowflakeId AutoRegister StackExchangeRedis: An extension of the SnowflakeId AutoRegister library, enabling automatic WorkerId registration in SnowflakeId systems using StackExchange.Redis
         </Description>
     </PropertyGroup>
@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.8.22"/>
     </ItemGroup>
 
 </Project>

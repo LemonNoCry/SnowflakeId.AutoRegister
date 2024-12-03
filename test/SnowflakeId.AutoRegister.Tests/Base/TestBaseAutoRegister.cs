@@ -1,15 +1,13 @@
-﻿using SnowflakeId.AutoRegister.Interfaces;
+﻿namespace SnowflakeId.AutoRegister.Tests.Base;
 
-namespace SnowflakeId.AutoRegister.Tests.Base;
-
-public class BaseAutoRegister
+public class TestBaseAutoRegister
 {
-    protected Func<AutoRegisterBuilder, AutoRegisterBuilder> SetRegisterBuild;
-
-    protected BaseAutoRegister()
+    protected TestBaseAutoRegister()
     {
         SetRegisterBuild = builder => builder;
     }
+
+    protected Func<AutoRegisterBuilder, AutoRegisterBuilder> SetRegisterBuild { get; set; }
 
     protected AutoRegisterBuilder GetAutoRegisterBuilder(AutoRegisterBuilder? builder = null)
     {
@@ -24,7 +22,9 @@ public class BaseAutoRegister
 
     protected virtual async Task Test_StorageAsync()
     {
-        var builder = GetAutoRegisterBuilder();
+        var builder = GetAutoRegisterBuilder()
+           .SetExtraIdentifier(this.GetType().FullName + nameof(Test_StorageAsync));
+
         var storage = builder.Storage;
 
         Assert.NotNull(storage);
@@ -60,7 +60,9 @@ public class BaseAutoRegister
 
     protected virtual void Test_RegisterWorker()
     {
-        using var register = GetAutoRegister();
+        var builder = GetAutoRegisterBuilder()
+           .SetExtraIdentifier(this.GetType().FullName + nameof(Test_RegisterWorker));
+        using var register = GetAutoRegister(builder);
         var idConfig = register.Register();
 
         Assert.NotNull(idConfig);
@@ -76,12 +78,10 @@ public class BaseAutoRegister
         for (var i = 0; i < tasks.Length; i++)
         {
             var currentIndex = i;
-            var builder = GetAutoRegisterBuilder();
+            var builder = GetAutoRegisterBuilder()
+               .SetExtraIdentifier(this.GetType().FullName + nameof(Test_MultipleConcurrentRegistrations) + currentIndex);
             storage = builder.Storage;
-            var idAutoRegister = builder
-                // Set the extra identifier to the current index
-               .SetRegisterOption(option => { option.ExtraIdentifier = currentIndex.ToString(); })
-               .Build();
+            var idAutoRegister = builder.Build();
 
             registers[i] = idAutoRegister;
             tasks[i] = Task.Run(() => idAutoRegister.Register());
@@ -115,7 +115,8 @@ public class BaseAutoRegister
 
     protected virtual void Test_WorkerId_Own()
     {
-        var builder = GetAutoRegisterBuilder();
+        var builder = GetAutoRegisterBuilder()
+           .SetExtraIdentifier(this.GetType().FullName + nameof(Test_WorkerId_Own));
         var storage = builder.Storage;
         using var register = GetAutoRegister(builder);
         var idConfig = register.Register();
@@ -135,10 +136,11 @@ public class BaseAutoRegister
 
     protected virtual void Test_WorkerId_Expired()
     {
-        var builder = GetAutoRegisterBuilder();
+        var builder = GetAutoRegisterBuilder()
+           .SetExtraIdentifier(this.GetType().FullName + nameof(Test_WorkerId_Expired));
         var storage = builder.Storage;
         using var register = builder
-           .SetRegisterOption(option => option.WorkerIdLifeMillisecond = 100)
+           .SetRegisterOption(option => option.WorkerIdLifeMillisecond = 900)
            .Build();
         var idConfig = register.Register();
 
@@ -155,7 +157,7 @@ public class BaseAutoRegister
         Assert.Equal(idConfig.Identifier, identifier);
 
         // Sleep for a while to expire the worker id
-        Thread.Sleep(100);
+        Thread.Sleep(1000);
 
         // Get the worker id
         workerId = storage?.Get(idConfig.Identifier);

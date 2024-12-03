@@ -31,6 +31,11 @@ public static class IdGeneratorUtil
             // Use the following line to use the SQL Server store.
             builder.UseSqlServerStore(App.Configuration["SqlServer:ConnectionString"]);
         }
+        else if (App.Configuration["MySql:Enabled"] == "True")
+        {
+            // Use the following line to use the MySQL store.
+            builder.UseMySqlStore(App.Configuration["MySql:ConnectionString"]);
+        }
         else
         {
             // Use the following line to use the default store.

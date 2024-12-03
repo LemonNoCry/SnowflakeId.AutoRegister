@@ -1,6 +1,5 @@
 ﻿// ReSharper disable NullableWarningSuppressionIsUsed
 
-#nullable disable
 namespace SnowflakeId.AutoRegister.Tests.Builder;
 
 [TestSubject(typeof(AutoRegisterBuilder))]

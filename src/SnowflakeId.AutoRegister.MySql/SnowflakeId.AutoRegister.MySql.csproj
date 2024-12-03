@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister;MySql</PackageTags>
+        <Version>1.0.0</Version>
+        <Description>SnowflakeId AutoRegister MySql: An extension of the SnowflakeId AutoRegister library, enabling automatic WorkerId registration in SnowflakeId systems using MySql</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SnowflakeId.AutoRegister.Db\SnowflakeId.AutoRegister.Db.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\Snowflake.Migrate.MySql.sql"/>
+    </ItemGroup>
+
+</Project>

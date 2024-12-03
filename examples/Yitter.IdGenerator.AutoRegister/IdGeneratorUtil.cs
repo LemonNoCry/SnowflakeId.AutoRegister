@@ -32,7 +32,10 @@ public static class IdGeneratorUtil
            .UseRedisStore("localhost:6379,allowAdmin=true")
 
             // Use the following line to use the SQL Server store.
-            //.UseSqlServerStore("Server=localhost;Database=IdGenerator;User Id=sa;Password=123456;")
+            //.UseSqlServerStore("Server=localhost;Database=SnowflakeTest;Integrated Security=SSPI;TrustServerCertificate=true;")
+
+            // Use the following line to use the MySQL store.
+           .UseMySqlStore("Server=localhost;Port=3306;Database=snowflaketest;Uid=test;Pwd=123456;SslMode=None;")
            .Build();
 
         // Unregister on process exit

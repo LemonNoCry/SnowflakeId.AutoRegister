@@ -1,26 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    
-    <IsPackable>false</IsPackable>
-    
-    <TargetFramework>net6.0</TargetFramework>
-    
-    <RootNamespace>SnowflakeId.AutoRegister.Tests</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2024.2.0-eap1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Include="xunit" Version="2.8.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-     <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj" />
-  </ItemGroup>
-  
 </Project>

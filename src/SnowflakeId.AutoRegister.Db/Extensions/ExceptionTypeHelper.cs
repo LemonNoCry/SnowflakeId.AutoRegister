@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Security;
 
-namespace SnowflakeId.AutoRegister.SqlServer.Extensions;
+namespace SnowflakeId.AutoRegister.Db.Extensions;
 
-internal static class ExceptionTypeHelper
+public static class ExceptionTypeHelper
 {
     private static readonly Type OutOfMemoryType = typeof(OutOfMemoryException);
     private static readonly Type StackOverflowType = typeof(StackOverflowException);
@@ -11,7 +11,7 @@ internal static class ExceptionTypeHelper
     private static readonly Type AccessViolationType = typeof(AccessViolationException);
     private static readonly Type SecurityType = typeof(SecurityException);
 
-    internal static bool IsCatchableExceptionType(this Exception e)
+    public static bool IsCatchableExceptionType(this Exception e)
     {
         var type = e.GetType();
         return type != OutOfMemoryType && type != StackOverflowType && type != ThreadAbortType && type != AccessViolationType &&

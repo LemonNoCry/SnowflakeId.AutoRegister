@@ -1,12 +1,11 @@
-﻿using SnowflakeId.AutoRegister.Tests.Base;
+﻿namespace SnowflakeId.AutoRegister.Tests.MySql.Examples;
 
-namespace SnowflakeId.AutoRegister.Tests.SqlServer.Examples;
-
-public class SqlServerAutoRegister : BaseAutoRegister
+[TestSubject(typeof(MySqlStorage))]
+public class MySqlAutoRegisterTest : TestBaseAutoRegister
 {
-    public SqlServerAutoRegister()
+    public MySqlAutoRegisterTest()
     {
-        SetRegisterBuild = builder => builder.UseSqlServerStore(ConnectionString);
+        SetRegisterBuild = builder => builder.UseMySqlStore(ConnectionString);
     }
 
     [Fact]

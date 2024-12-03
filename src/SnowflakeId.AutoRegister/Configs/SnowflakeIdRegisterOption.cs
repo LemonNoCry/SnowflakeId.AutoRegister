@@ -11,7 +11,8 @@ public class SnowflakeIdRegisterOption
     public int MaxLoopCount { get; set; } = 3;
 
     /// <summary>
-    /// Gets or sets the lifetime of a WorkerId in milliseconds. The default value is 30000 (30 seconds).
+    /// Gets or sets the lifetime of a WorkerId in milliseconds. The default value is 30000 (30 seconds).<br/>
+    /// Don't set it too low, otherwise, the WorkerId may be released before the WorkerId is actually expired.
     /// </summary>
     public int WorkerIdLifeMillisecond { get; set; } = 1000 * 30;
 
@@ -47,9 +48,9 @@ public class SnowflakeIdRegisterOption
             throw new ArgumentException("MaxLoopCount must be greater than or equal to 1");
         }
 
-        if (WorkerIdLifeMillisecond <= 0)
+        if (WorkerIdLifeMillisecond < 900)
         {
-            throw new ArgumentException("WorkerIdLifeMillisecond must be greater than or equal to 0");
+            throw new ArgumentException("WorkerIdLifeMillisecond must be greater than or equal to 900");
         }
 
         if (MinWorkerId < 0)

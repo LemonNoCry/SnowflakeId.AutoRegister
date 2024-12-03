@@ -8,13 +8,11 @@ namespace SnowflakeId.AutoRegister.Core;
 internal class DefaultAutoRegister : IAutoRegister
 {
     internal const string WorkerIdKeyPrefix = "WorkerId:{0}";
-    protected readonly IStorage Storage;
-    protected readonly SnowflakeIdRegisterOption RegisterOption;
     public readonly string Identifier;
-    protected SnowflakeIdConfig? SnowflakeIdConfig;
+    protected readonly SnowflakeIdRegisterOption RegisterOption;
+    protected readonly IStorage Storage;
     protected ExtendLifeTimeTask? ExtendLifeTimeTask;
-
-    protected internal string WorkerIdFormat(long workerId) => string.Format(WorkerIdKeyPrefix, workerId);
+    protected SnowflakeIdConfig? SnowflakeIdConfig;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultAutoRegister"/> class.
@@ -49,48 +47,11 @@ internal class DefaultAutoRegister : IAutoRegister
             };
 
             ExtendLifeTimeTask =
-                new ExtendLifeTimeTask(TimeSpan.FromMilliseconds(RegisterOption.WorkerIdLifeMillisecond / 3d), ExtendLifeTimeOperation);
+                new ExtendLifeTimeTask(TimeSpan.FromMilliseconds(RegisterOption.WorkerIdLifeMillisecond / 3d),
+                    cancellationToken => ExtendLifeTimeOperation(SnowflakeIdConfig, cancellationToken));
             ExtendLifeTimeTask.Start();
 
             return SnowflakeIdConfig;
-
-            // Run long time task. Extend the WorkerId life cycle
-            // Every 1/3 of the SnowflakeIdRegisterOption.WorkerIdLifeMillisecond , the Lifetime is renewed (extended) by the server.
-            async Task ExtendLifeTimeOperation(CancellationToken cancellationToken)
-            {
-                // The task has been canceled, preventing further execution
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                // Extend the life of the WorkerId
-                var key = WorkerIdFormat(SnowflakeIdConfig.WorkerId);
-                var flag = await Storage.ExpireAsync(key, RegisterOption.WorkerIdLifeMillisecond);
-                if (!flag && !cancellationToken.IsCancellationRequested)
-                {
-                    // In theory, you shouldn't go here
-                    // If the WorkerId is not found in the cache, it means that the WorkerId has expired.
-                    // Try to re-register the WorkerId
-                    Storage.SetNotExists(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
-                }
-
-                // The task has been canceled, preventing further execution
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                // Extend the life of the Identifier
-                flag = await Storage.ExpireAsync(Identifier, RegisterOption.WorkerIdLifeMillisecond);
-                if (!flag && !cancellationToken.IsCancellationRequested)
-                {
-                    // In theory, you shouldn't go here
-                    // If the Identifier is not found in the cache, it means that the Identifier has expired.
-                    // Try to re-register the Identifier
-                    Storage.SetNotExists(Identifier, SnowflakeIdConfig.WorkerId.ToString(), RegisterOption.WorkerIdLifeMillisecond);
-                }
-            }
         }
     }
 
@@ -115,6 +76,50 @@ internal class DefaultAutoRegister : IAutoRegister
 
             SnowflakeIdConfig = null;
             ExtendLifeTimeTask = null;
+        }
+    }
+
+    protected internal string WorkerIdFormat(long workerId) => string.Format(WorkerIdKeyPrefix, workerId);
+
+    /// <summary>
+    /// Run long time task. Extend the WorkerId life cycle
+    /// Every 1/3 of the SnowflakeIdRegisterOption.WorkerIdLifeMillisecond , the Lifetime is renewed (extended) by the server.
+    /// </summary>
+    /// <param name="config"></param>
+    /// <param name="cancellationToken"></param>
+    private async Task ExtendLifeTimeOperation(SnowflakeIdConfig config, CancellationToken cancellationToken)
+    {
+        // The task has been canceled, preventing further execution
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        // Extend the life of the WorkerId
+        var key = WorkerIdFormat(config.WorkerId);
+        var flag = await Storage.ExpireAsync(key, RegisterOption.WorkerIdLifeMillisecond);
+        if (!flag && !cancellationToken.IsCancellationRequested)
+        {
+            // In theory, you shouldn't go here
+            // If the WorkerId is not found in the cache, it means that the WorkerId has expired.
+            // Try to re-register the WorkerId
+            Storage.SetNotExists(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
+        }
+
+        // The task has been canceled, preventing further execution
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        // Extend the life of the Identifier
+        flag = await Storage.ExpireAsync(Identifier, RegisterOption.WorkerIdLifeMillisecond);
+        if (!flag && !cancellationToken.IsCancellationRequested)
+        {
+            // In theory, you shouldn't go here
+            // If the Identifier is not found in the cache, it means that the Identifier has expired.
+            // Try to re-register the Identifier
+            Storage.SetNotExists(Identifier, config.WorkerId.ToString(), RegisterOption.WorkerIdLifeMillisecond);
         }
     }
 

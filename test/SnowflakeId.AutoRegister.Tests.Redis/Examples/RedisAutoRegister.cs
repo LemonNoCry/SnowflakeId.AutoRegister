@@ -1,8 +1,6 @@
-﻿using SnowflakeId.AutoRegister.Tests.Base;
+﻿namespace SnowflakeId.AutoRegister.Tests.Redis.Examples;
 
-namespace SnowflakeId.AutoRegister.Tests.Redis.Examples;
-
-public class RedisAutoRegister : BaseAutoRegister
+public class RedisAutoRegister : TestBaseAutoRegister
 {
     private static readonly ConnectionMultiplexer _connection = ConnectionMultiplexer.Connect(ConnectionString);
 
@@ -40,6 +38,6 @@ public class RedisAutoRegister : BaseAutoRegister
     [Fact]
     protected override void Test_WorkerId_Expired()
     {
-         base.Test_WorkerId_Expired();
+        base.Test_WorkerId_Expired();
     }
 }

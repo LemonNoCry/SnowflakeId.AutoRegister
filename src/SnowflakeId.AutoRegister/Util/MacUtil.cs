@@ -13,15 +13,13 @@ public class MacUtil
     /// <returns>The MAC address of the current machine.</returns>
     public static string GetMacAddress()
     {
-        var mac = string.Empty;
-        var nics = NetworkInterface.GetAllNetworkInterfaces();
-        foreach (var adapter in nics)
-        {
-            if (adapter.NetworkInterfaceType != NetworkInterfaceType.Ethernet) continue;
-            mac = adapter.GetPhysicalAddress().ToString();
-            break;
-        }
+        var adapter = NetworkInterface
+           .GetAllNetworkInterfaces()
+           .FirstOrDefault(nic =>
+                nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
+                nic.OperationalStatus == OperationalStatus.Up &&
+                nic.GetPhysicalAddress().GetAddressBytes().Length > 0);
 
-        return mac;
+        return adapter?.GetPhysicalAddress().ToString() ?? string.Empty;
     }
 }

@@ -78,14 +78,5 @@ internal class RedisStorage : IStorage
         }
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (_storageOption.ConnectionMultiplexerFactory is null)
-        {
-            // If the connection was created by me (not by the factory), I will dispose it
-            await _connection.DisposeAsync();
-        }
-    }
-
     #endregion
 }

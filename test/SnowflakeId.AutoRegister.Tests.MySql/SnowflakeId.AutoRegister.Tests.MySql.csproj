@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MySql.Data" Version="9.1.0"/>
+        <PackageReference Include="System.Text.Json" Version="8.0.5"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister.MySql\SnowflakeId.AutoRegister.MySql.csproj"/>
+        <ProjectReference Include="..\SnowflakeId.AutoRegister.Tests\SnowflakeId.AutoRegister.Tests.csproj"/>
+    </ItemGroup>
+
+</Project>

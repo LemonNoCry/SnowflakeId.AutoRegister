@@ -1,8 +1,4 @@
-﻿using SnowflakeId.AutoRegister.SqlServer.Core;
-using SnowflakeId.AutoRegister.SqlServer.Resources;
-using Xunit.Abstractions;
-
-namespace SnowflakeId.AutoRegister.Tests.SqlServer.Core;
+﻿namespace SnowflakeId.AutoRegister.Tests.SqlServer.Core;
 
 [TestSubject(typeof(SqlServerMigrate))]
 public class SqlServerMigrateTest(ITestOutputHelper testOutputHelper)
