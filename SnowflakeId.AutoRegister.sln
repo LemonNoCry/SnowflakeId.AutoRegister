@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		LICENSE.txt = LICENSE.txt
 		README.en.md = README.en.md
+		pack.cmd = pack.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{32DD7F02-1B46-43B3-A869-4877C8D8EC73}"

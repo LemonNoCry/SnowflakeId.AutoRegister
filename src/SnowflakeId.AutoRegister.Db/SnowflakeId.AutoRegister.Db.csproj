@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <IsPackable>false</IsPackable>
+        <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister;</PackageTags>
+        <Version>1.0.0</Version>
+        <Description>SnowflakeId AutoRegister Db: A base library for SnowflakeId AutoRegister, providing database support for automatic WorkerId registration in SnowflakeId systems</Description>
     </PropertyGroup>
 
     <ItemGroup>

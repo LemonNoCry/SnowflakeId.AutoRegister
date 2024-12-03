@@ -2,13 +2,13 @@
 
     <PropertyGroup>
         <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister;SqlServer</PackageTags>
-        <Version>1.0.2</Version>
+        <Version>1.0.3</Version>
         <Description>SnowflakeId AutoRegister StackExchangeRedis: An extension of the SnowflakeId AutoRegister library, enabling automatic WorkerId registration in SnowflakeId systems using SqlServer
         </Description>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SnowflakeId.AutoRegister.Db\SnowflakeId.AutoRegister.Db.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\SnowflakeId.AutoRegister.Db\SnowflakeId.AutoRegister.Db.csproj"/>
         <ProjectReference Include="..\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj"/>
     </ItemGroup>
 
