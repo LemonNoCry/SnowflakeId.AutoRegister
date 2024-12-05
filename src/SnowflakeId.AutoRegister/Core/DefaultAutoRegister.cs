@@ -11,7 +11,7 @@ internal class DefaultAutoRegister : IAutoRegister
     public readonly string Identifier;
     protected readonly SnowflakeIdRegisterOption RegisterOption;
     protected readonly IStorage Storage;
-    protected ExtendLifeTimeTask? ExtendLifeTimeTask;
+    protected internal ExtendLifeTimeTask? ExtendLifeTimeTask;
     protected SnowflakeIdConfig? SnowflakeIdConfig;
 
     /// <summary>
@@ -98,28 +98,25 @@ internal class DefaultAutoRegister : IAutoRegister
         // Extend the life of the WorkerId
         var key = WorkerIdFormat(config.WorkerId);
         var flag = await Storage.ExpireAsync(key, RegisterOption.WorkerIdLifeMillisecond);
-        if (!flag && !cancellationToken.IsCancellationRequested)
+        if (!flag)
         {
             // In theory, you shouldn't go here
             // If the WorkerId is not found in the cache, it means that the WorkerId has expired.
             // Try to re-register the WorkerId
-            Storage.SetNotExists(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
+            flag = Storage.SetNotExists(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
+            if (!flag)
+                // TODO Renewal failed, try to re-register the WorkerId
+                return;
         }
+
+        // Extend the life of the Identifier
+        Storage.Set(Identifier, config.WorkerId.ToString(), RegisterOption.WorkerIdLifeMillisecond);
 
         // The task has been canceled, preventing further execution
         if (cancellationToken.IsCancellationRequested)
         {
-            return;
-        }
-
-        // Extend the life of the Identifier
-        flag = await Storage.ExpireAsync(Identifier, RegisterOption.WorkerIdLifeMillisecond);
-        if (!flag && !cancellationToken.IsCancellationRequested)
-        {
-            // In theory, you shouldn't go here
-            // If the Identifier is not found in the cache, it means that the Identifier has expired.
-            // Try to re-register the Identifier
-            Storage.SetNotExists(Identifier, config.WorkerId.ToString(), RegisterOption.WorkerIdLifeMillisecond);
+            Storage.Delete(key);
+            Storage.Delete(Identifier);
         }
     }
 
@@ -143,10 +140,18 @@ internal class DefaultAutoRegister : IAutoRegister
                 if (value == Identifier)
                 {
                     // Extend the life of the WorkerId
-                    Storage.Expire(key, RegisterOption.WorkerIdLifeMillisecond);
-                    Storage.Expire(Identifier, RegisterOption.WorkerIdLifeMillisecond);
-                    return usedWorkerId;
+                    var flag = Storage.Expire(key, RegisterOption.WorkerIdLifeMillisecond);
+                    if (flag)
+                    {
+                        Storage.Set(Identifier, key, RegisterOption.WorkerIdLifeMillisecond);
+                        return usedWorkerId;
+                    }
+
+                    // If the extension fails, it may indicate that another process is using the WorkerId
                 }
+
+                // Delete the invalid WorkerId
+                Storage.Delete(Identifier);
             }
 
             // If the cache does not exist, try to get the valid WorkerId from the storage

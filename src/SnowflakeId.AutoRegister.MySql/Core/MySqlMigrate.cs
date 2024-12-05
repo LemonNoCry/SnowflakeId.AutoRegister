@@ -22,6 +22,7 @@ public class MySqlMigrate
     {
         if (connection == null)
             throw new ArgumentNullException(nameof(connection));
+
         connection.Execute(GetMigrateScript(schema));
     }
 }

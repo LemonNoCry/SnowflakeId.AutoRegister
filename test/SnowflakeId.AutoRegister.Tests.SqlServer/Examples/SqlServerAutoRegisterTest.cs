@@ -37,4 +37,10 @@ public class SqlServerAutoRegisterTest : TestBaseAutoRegister
     {
         base.Test_WorkerId_Expired();
     }
+
+    [Fact]
+    protected override void Test_WorkerId_Own_Scramble()
+    {
+        base.Test_WorkerId_Own_Scramble();
+    }
 }

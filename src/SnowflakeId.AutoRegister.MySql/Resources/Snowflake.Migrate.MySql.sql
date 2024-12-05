@@ -26,45 +26,30 @@ SELECT 'Installing Snowflake SQL objects...';
 -- Create the `Schema` table if it doesn't exist
 CREATE TABLE IF NOT EXISTS `$(SnowflakeSchema)_Schema`
 (
-    `Version`
-    INT
-    NOT
-    NULL,
-    PRIMARY
-    KEY
-(
-    `Version`
-)
-    ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+    `Version` INT NOT NULL,
+    PRIMARY KEY (`Version`)
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_general_ci;
 
 SELECT 'Created table `$(SnowflakeSchema)_Schema`';
 
 -- Create `RegisterKeyValues` table
 CREATE TABLE IF NOT EXISTS `$(SnowflakeSchema)_RegisterKeyValues`
 (
-    `Key`
-    VARCHAR
-(
-    50
-) NOT NULL,
-    `Value` VARCHAR
-(
-    250
-) NOT NULL,
-    `CreatedTime` DATETIME NOT NULL DEFAULT NOW
-(
-),
-    `ExpireTime` DATETIME NOT NULL,
-    PRIMARY KEY
-(
-    `Key`
-)
-    ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+    `Key`         VARCHAR(50)  NOT NULL,
+    `Value`       VARCHAR(250) NOT NULL,
+    `CreatedTime` DATETIME     NOT NULL DEFAULT NOW(),
+    `ExpireTime`  DATETIME     NOT NULL,
+    PRIMARY KEY (`Key`)
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_general_ci;
 
 SELECT 'Created table `$(SnowflakeSchema)_RegisterKeyValues`';
 
 -- Set the current schema version to 1
-INSERT INTO `$(SnowflakeSchema)_Schema` (`Version`) VALUES (1) ON DUPLICATE KEY UPDATE `Version` = VALUES (`Version`);
+INSERT INTO `$(SnowflakeSchema)_Schema` (`Version`) VALUES (1) ON DUPLICATE KEY UPDATE `Version` = VALUES(`Version`);
 
 SELECT 'Snowflake database schema installed';
 

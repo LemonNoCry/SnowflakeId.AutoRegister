@@ -38,7 +38,7 @@ public abstract class BaseDbStorage : IStorage
     private void ClearExpiredValues(string? key = default)
     {
         UseConnection(connection =>
-            connection.Execute(SqlQueryProvider.GetClearExpiredQuery(Options.SchemaName), new { key, now = DateTime.Now }));
+            connection.Execute(SqlQueryProvider.GetClearExpiredQuery(Options.SchemaName), new { key = key ?? string.Empty, now = DateTime.Now }));
     }
 
     public bool Exist(string key)
@@ -88,7 +88,6 @@ public abstract class BaseDbStorage : IStorage
 
     public bool Expire(string key, int millisecond)
     {
-        ClearExpiredValues(key);
         return UseConnection((connection) =>
         {
             var parameters = new
@@ -103,7 +102,6 @@ public abstract class BaseDbStorage : IStorage
 
     public Task<bool> ExpireAsync(string key, int millisecond)
     {
-        ClearExpiredValues(key);
         return UseConnectionAsync(Func);
 
         async Task<bool> Func(DbConnection connection)

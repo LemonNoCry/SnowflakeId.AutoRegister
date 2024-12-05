@@ -2,10 +2,11 @@
 
 public class ExtendLifeTimeTask(TimeSpan interval, Func<CancellationToken, Task> operation)
 {
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private CancellationTokenSource _cancellationTokenSource = new();
 
     public void Start()
     {
+        _cancellationTokenSource = new CancellationTokenSource();
         Task.Factory.StartNew(() => RunPeriodicAsync(_cancellationTokenSource.Token),
             _cancellationTokenSource.Token,
             TaskCreationOptions.LongRunning,
