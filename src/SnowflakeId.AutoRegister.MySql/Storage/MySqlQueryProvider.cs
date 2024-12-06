@@ -1,6 +1,4 @@
-﻿using SnowflakeId.AutoRegister.Db.Storage;
-
-namespace SnowflakeId.AutoRegister.MySql.Storage;
+﻿namespace SnowflakeId.AutoRegister.MySql.Storage;
 
 public class MySqlQueryProvider : ISqlQueryProvider
 {

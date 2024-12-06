@@ -1,20 +1,22 @@
-﻿using SnowflakeId.AutoRegister.Core;
-
-namespace SnowflakeId.AutoRegister.Tests.Base;
+﻿namespace SnowflakeId.AutoRegister.Tests.Base;
 
 public class TestBaseAutoRegister
 {
-    protected TestBaseAutoRegister()
+    protected TestBaseAutoRegister(ITestOutputHelper testOutputHelper)
     {
         SetRegisterBuild = builder => builder;
+        LogAction = testOutputHelper.GetLogAction();
     }
 
     protected Func<AutoRegisterBuilder, AutoRegisterBuilder> SetRegisterBuild { get; set; }
+    protected Action<LogLevel, string, Exception?>? LogAction { get; set; }
 
     protected AutoRegisterBuilder GetAutoRegisterBuilder(AutoRegisterBuilder? builder = null)
     {
         builder ??= new AutoRegisterBuilder();
-        return SetRegisterBuild(builder);
+        return SetRegisterBuild(builder)
+           .SetLogger(LogAction)
+           .SetLogMinimumLevel(LogLevel.Trace);
     }
 
     protected IAutoRegister GetAutoRegister(AutoRegisterBuilder? builder = null)
@@ -142,7 +144,7 @@ public class TestBaseAutoRegister
            .SetExtraIdentifier(this.GetType().FullName + nameof(Test_WorkerId_Expired));
         var storage = builder.Storage;
         using var register = builder
-           .SetRegisterOption(option => option.WorkerIdLifeMillisecond = 900)
+           .SetWorkerIdLifeMillisecond(900)
            .Build();
         var idConfig = register.Register();
 
@@ -176,7 +178,7 @@ public class TestBaseAutoRegister
     protected virtual void Test_WorkerId_Own_Scramble()
     {
         var builder = GetAutoRegisterBuilder()
-           .SetRegisterOption(option => option.WorkerIdLifeMillisecond = 9000)
+           .SetWorkerIdLifeMillisecond(9000)
            .SetExtraIdentifier(GetType().FullName + nameof(Test_WorkerId_Own_Scramble) + "1");
         var storage = builder.Storage;
         Assert.NotNull(storage);
@@ -198,7 +200,7 @@ public class TestBaseAutoRegister
         storage.Delete(register.Identifier);
 
         var builder2 = GetAutoRegisterBuilder()
-           .SetRegisterOption(option => option.WorkerIdLifeMillisecond = 9000)
+           .SetWorkerIdLifeMillisecond(9000)
            .SetExtraIdentifier(GetType().FullName + nameof(Test_WorkerId_Own_Scramble) + "2");
         using var register2 = (DefaultAutoRegister)GetAutoRegister(builder2);
         var idConfig2 = register2.Register();
@@ -215,9 +217,11 @@ public class TestBaseAutoRegister
         Assert.NotNull(register.ExtendLifeTimeTask);
         Assert.NotNull(register2.ExtendLifeTimeTask);
         register.ExtendLifeTimeTask.Start();
-        register2.ExtendLifeTimeTask.Stop();
 
-        Assert.False(storage.Exist(idConfig.Identifier));
+        Thread.Sleep(300);
+
+        // Because process 1 starts to recover, WorkId is still held by process 2, and process 1 also marks that it also has WorkId
+        Assert.True(storage.Exist(idConfig.Identifier));
         Assert.Equal(idConfig2.Identifier, storage.Get(register.WorkerIdFormat(idConfig2.WorkerId)));
     }
 }

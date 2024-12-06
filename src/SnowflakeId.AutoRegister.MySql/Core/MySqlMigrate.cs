@@ -1,7 +1,4 @@
-﻿using System.Data.Common;
-using SnowflakeId.AutoRegister.Db.Configs;
-using SnowflakeId.AutoRegister.Db.Extensions;
-using SnowflakeId.AutoRegister.MySql.Resources;
+﻿using SnowflakeId.AutoRegister.MySql.Resources;
 
 namespace SnowflakeId.AutoRegister.MySql.Core;
 

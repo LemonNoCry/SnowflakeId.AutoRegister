@@ -1,7 +1,4 @@
-﻿using System.Data.Common;
-using SnowflakeId.AutoRegister.Db.Configs;
-
-namespace SnowflakeId.AutoRegister.MySql.Configs;
+﻿namespace SnowflakeId.AutoRegister.MySql.Configs;
 
 /// <summary>
 /// Represents the options for configuring MySQL in the SnowflakeId AutoRegister system.

@@ -1,6 +1,4 @@
-﻿using SnowflakeId.AutoRegister.Db.Storage;
-
-namespace SnowflakeId.AutoRegister.SqlServer.Storage;
+﻿namespace SnowflakeId.AutoRegister.SqlServer.Storage;
 
 public class SqlServerQueryProvider : ISqlQueryProvider
 {

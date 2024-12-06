@@ -102,6 +102,10 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     // Optionally, distinguish processes with the same path.
     // .SetExtraIdentifier(Environment.CurrentDirectory + Process.GetCurrentProcess().Id)
 
+    // Set Logger.
+    .SetLogMinimumLevel(SnowflakeId.AutoRegister.Logging.LogLevel.Debug)
+    .SetLogger((level, message, ex) => Console.WriteLine($"[{DateTime.Now}] [{level}] {message} {ex}"))
+    
     // Set the range for WorkerIds.
     .SetWorkerIdScope(1, 31)
 

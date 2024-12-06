@@ -3,7 +3,7 @@
 [TestSubject(typeof(MySqlStorage))]
 public class MySqlAutoRegisterTest : TestBaseAutoRegister
 {
-    public MySqlAutoRegisterTest()
+    public MySqlAutoRegisterTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
     {
         SetRegisterBuild = builder => builder.UseMySqlStore(ConnectionString);
     }

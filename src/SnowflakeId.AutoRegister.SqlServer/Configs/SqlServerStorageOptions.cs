@@ -1,7 +1,4 @@
-﻿using System.Data.Common;
-using SnowflakeId.AutoRegister.Db.Configs;
-
-namespace SnowflakeId.AutoRegister.SqlServer.Configs;
+﻿namespace SnowflakeId.AutoRegister.SqlServer.Configs;
 
 /// <summary>
 /// Represents the options for configuring SQL Server in the SnowflakeId AutoRegister system.

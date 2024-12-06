@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Security;
-
-namespace SnowflakeId.AutoRegister.Db.Extensions;
+﻿namespace SnowflakeId.AutoRegister.Db.Extensions;
 
 public static class ExceptionTypeHelper
 {

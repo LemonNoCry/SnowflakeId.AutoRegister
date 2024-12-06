@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using SnowflakeId.AutoRegister.Builder;
 using SnowflakeId.AutoRegister.Interfaces;
+using SnowflakeId.AutoRegister.Logging;
 
 namespace Yitter.IdGenerator.Fx.AutoRegister;
 
@@ -23,6 +24,11 @@ public static class IdGeneratorUtil
 
             // Use the following line to set the WorkerId scope.
            .SetWorkerIdScope(1, 31)
+
+            // Set the log output.
+           .SetLogMinimumLevel(LogLevel.Debug)
+           .SetLogger((level, message, ex) => Console.WriteLine($"[{DateTime.Now}] [{level}] {message} {ex}"))
+
             // Use the following line to set the register option.
             // .SetRegisterOption(option => {})
 

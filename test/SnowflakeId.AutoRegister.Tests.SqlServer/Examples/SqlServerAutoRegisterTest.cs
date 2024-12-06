@@ -3,7 +3,7 @@
 [TestSubject(typeof(SqlServerStorage))]
 public class SqlServerAutoRegisterTest : TestBaseAutoRegister
 {
-    public SqlServerAutoRegisterTest()
+    public SqlServerAutoRegisterTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
     {
         SetRegisterBuild = builder => builder.UseSqlServerStore(ConnectionString);
     }

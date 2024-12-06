@@ -1,6 +1,4 @@
-﻿using SnowflakeId.AutoRegister.StackExchangeRedis.Configs;
-
-namespace SnowflakeId.AutoRegister.StackExchangeRedis.Storage;
+﻿namespace SnowflakeId.AutoRegister.StackExchangeRedis.Storage;
 
 /// <summary>
 /// Represents a Redis storage mechanism for the SnowflakeId AutoRegister system.

@@ -1,13 +1,11 @@
-﻿using SnowflakeId.AutoRegister.Db.Storage;
-using SnowflakeId.AutoRegister.MySql.Configs;
-using SnowflakeId.AutoRegister.MySql.Core;
+﻿using SnowflakeId.AutoRegister.MySql.Core;
 
 namespace SnowflakeId.AutoRegister.MySql.Storage;
 
 /// <summary>
 /// Represents a MySQL storage mechanism for the SnowflakeId AutoRegister system.
 /// </summary>
-public class MySqlStorage : BaseDbStorage
+internal class MySqlStorage : BaseDbStorage
 {
     private readonly MySqlStorageOptions _options;
 

@@ -1,7 +1,5 @@
-﻿using SnowflakeId.AutoRegister.StackExchangeRedis.Configs;
-using SnowflakeId.AutoRegister.StackExchangeRedis.Storage;
+﻿// ReSharper disable once CheckNamespace
 
-// ReSharper disable once CheckNamespace
 namespace SnowflakeId.AutoRegister.Builder;
 
 public static class AutoRegisterBuildExtension

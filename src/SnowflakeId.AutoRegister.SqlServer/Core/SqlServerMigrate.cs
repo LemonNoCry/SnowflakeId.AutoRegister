@@ -1,7 +1,4 @@
-﻿using System.Data.Common;
-using SnowflakeId.AutoRegister.Db.Configs;
-using SnowflakeId.AutoRegister.Db.Extensions;
-using SnowflakeId.AutoRegister.SqlServer.Resources;
+﻿using SnowflakeId.AutoRegister.SqlServer.Resources;
 
 namespace SnowflakeId.AutoRegister.SqlServer.Core;
 

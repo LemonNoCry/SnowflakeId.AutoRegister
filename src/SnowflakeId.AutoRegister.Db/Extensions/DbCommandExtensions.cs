@@ -1,6 +1,4 @@
-﻿using System.Data.Common;
-
-namespace SnowflakeId.AutoRegister.Db.Extensions;
+﻿namespace SnowflakeId.AutoRegister.Db.Extensions;
 
 /// <summary>
 /// Provides extension methods for executing commands on DbConnection.

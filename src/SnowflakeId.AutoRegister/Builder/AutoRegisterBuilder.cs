@@ -5,11 +5,43 @@
 /// </summary>
 public class AutoRegisterBuilder
 {
-    private IStorage? _store;
     private readonly SnowflakeIdRegisterOption _registerOption = new();
 
     private Func<IStorage, SnowflakeIdRegisterOption, IAutoRegister> _registerFactory = (storage, option) =>
         new DefaultAutoRegister(storage, option);
+
+    private IStorage? _store;
+
+    #region internal
+
+    internal IStorage? Storage => _store;
+
+    #endregion
+
+    #region RegisterFactory
+
+    /// <summary>
+    /// Sets the factory method for creating an IAutoRegister instance.
+    /// </summary>
+    /// <param name="factory">The factory method for creating an IAutoRegister instance.</param>
+    /// <returns>The AutoRegisterBuilder instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the factory parameter is null.</exception>
+    public AutoRegisterBuilder SetRegisterFactory(Func<IStorage, SnowflakeIdRegisterOption, IAutoRegister> factory)
+    {
+        _registerFactory = factory ?? throw new ArgumentNullException(nameof(factory));
+        return this;
+    }
+
+    #endregion
+
+    public IAutoRegister Build()
+    {
+        if (_store is null) throw new ArgumentNullException(nameof(_store), "Please use UseDefaultStore or UseStore method to set the storage");
+
+        _registerOption.Validate();
+
+        return _registerFactory(_store, _registerOption);
+    }
 
     #region Storage
 
@@ -99,39 +131,43 @@ public class AutoRegisterBuilder
         return this;
     }
 
-    #endregion
-
-    #region RegisterFactory
-
     /// <summary>
-    /// Sets the factory method for creating an IAutoRegister instance.
+    /// Gets or sets the lifetime of a WorkerId in milliseconds. The default value is 30000 (30 seconds).<br />
+    /// Don't set it too low, otherwise, the WorkerId may be released before the WorkerId is actually expired.
     /// </summary>
-    /// <param name="factory">The factory method for creating an IAutoRegister instance.</param>
-    /// <returns>The AutoRegisterBuilder instance.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the factory parameter is null.</exception>
-    public AutoRegisterBuilder SetRegisterFactory(Func<IStorage, SnowflakeIdRegisterOption, IAutoRegister> factory)
+    /// <param name="workerIdLifeMillisecond">ms</param>
+    /// <returns></returns>
+    public AutoRegisterBuilder SetWorkerIdLifeMillisecond(int workerIdLifeMillisecond)
     {
-        _registerFactory = factory ?? throw new ArgumentNullException(nameof(factory));
+        _registerOption.WorkerIdLifeMillisecond = workerIdLifeMillisecond;
         return this;
     }
 
     #endregion
 
-    #region internal
+    #region Logging
 
-    internal IStorage? Storage => _store;
+    /// <summary>
+    /// Sets the logger for the AutoRegister system.
+    /// </summary>
+    /// <param name="logAction"></param>
+    /// <returns></returns>
+    public AutoRegisterBuilder SetLogger(Action<LogLevel, string, Exception?>? logAction)
+    {
+        LogManager.Instance.SetLogAction(logAction);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the minimum log level for the logger.
+    /// </summary>
+    /// <param name="logLevel"></param>
+    /// <returns></returns>
+    public AutoRegisterBuilder SetLogMinimumLevel(LogLevel logLevel)
+    {
+        LogManager.Instance.SetMinimumLogLevel(logLevel);
+        return this;
+    }
 
     #endregion
-
-    public IAutoRegister Build()
-    {
-        if (_store is null)
-        {
-            throw new ArgumentNullException(nameof(_store), "Please use UseDefaultStore or UseStore method to set the storage");
-        }
-
-        _registerOption.Validate();
-
-        return _registerFactory(_store, _registerOption);
-    }
 }

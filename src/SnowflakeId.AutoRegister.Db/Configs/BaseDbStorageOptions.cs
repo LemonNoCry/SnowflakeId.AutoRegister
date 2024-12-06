@@ -1,6 +1,4 @@
-﻿using System.Data.Common;
-
-namespace SnowflakeId.AutoRegister.Db.Configs;
+﻿namespace SnowflakeId.AutoRegister.Db.Configs;
 
 /// <summary>
 /// Represents the base options for configuring a database storage mechanism in the SnowflakeId AutoRegister system.
@@ -13,7 +11,7 @@ public abstract class BaseDbStorageOptions
     /// <summary>
     /// Gets or sets the name of the schema in the database.
     /// </summary>
-    public string SchemaName = DefaultSchema;
+    public string SchemaName { get; set; } = DefaultSchema;
 
     /// <summary>
     /// Gets or sets the connection string used to connect to the database.

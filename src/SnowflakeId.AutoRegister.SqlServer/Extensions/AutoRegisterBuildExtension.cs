@@ -1,6 +1,4 @@
-﻿using System.Data.Common;
-using SnowflakeId.AutoRegister.SqlServer.Configs;
-using SnowflakeId.AutoRegister.SqlServer.Storage;
+﻿using SnowflakeId.AutoRegister.SqlServer.Storage;
 
 // ReSharper disable once CheckNamespace
 namespace SnowflakeId.AutoRegister.Builder;

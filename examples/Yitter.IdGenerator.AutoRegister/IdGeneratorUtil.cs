@@ -1,5 +1,6 @@
 ﻿using SnowflakeId.AutoRegister.Builder;
 using SnowflakeId.AutoRegister.Interfaces;
+using SnowflakeId.AutoRegister.Logging;
 
 namespace Yitter.IdGenerator.AutoRegister;
 
@@ -18,6 +19,10 @@ public static class IdGeneratorUtil
 
             // Differentiate between multiple processes
             //.SetExtraIdentifier(Environment.CurrentDirectory + Process.GetCurrentProcess().Id)
+
+            // Set the log output.
+           .SetLogMinimumLevel(LogLevel.Debug)
+           .SetLogger((level, message, ex) => Console.WriteLine($"[{DateTime.Now}] [{level}] {message} {ex}"))
 
             // Use the following line to set the WorkerId scope.
            .SetWorkerIdScope(1, 31)
@@ -43,7 +48,6 @@ public static class IdGeneratorUtil
         {
             // Unregister the SnowflakeIdConfig.
             builder.UnRegister();
-            Console.WriteLine("Unregistered.");
         };
         return builder;
     });

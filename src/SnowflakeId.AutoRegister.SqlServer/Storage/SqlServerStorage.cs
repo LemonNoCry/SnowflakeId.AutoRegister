@@ -1,13 +1,11 @@
-﻿using SnowflakeId.AutoRegister.Db.Storage;
-using SnowflakeId.AutoRegister.SqlServer.Configs;
-using SnowflakeId.AutoRegister.SqlServer.Core;
+﻿using SnowflakeId.AutoRegister.SqlServer.Core;
 
 namespace SnowflakeId.AutoRegister.SqlServer.Storage;
 
 /// <summary>
 /// Represents a SQL Server storage mechanism for the SnowflakeId AutoRegister system.
 /// </summary>
-public class SqlServerStorage : BaseDbStorage
+internal class SqlServerStorage : BaseDbStorage
 {
     private readonly SqlServerStorageOptions _options;
 

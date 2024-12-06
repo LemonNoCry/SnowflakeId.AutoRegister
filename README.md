@@ -101,6 +101,10 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     // 区分同路径exe,多个进程
     // .SetExtraIdentifier(Environment.CurrentDirectory + Process.GetCurrentProcess().Id)S
     
+    // 日志配置
+    .SetLogMinimumLevel(SnowflakeId.AutoRegister.Logging.LogLevel.Debug)
+    .SetLogger((level, message, ex) => Console.WriteLine($"[{DateTime.Now}] [{level}] {message} {ex}"))
+    
     // 使用以下行设置 WorkerId 范围。
     .SetWorkerIdScope(1, 31)
     // 使用以下行设置注册选项。
