@@ -18,7 +18,7 @@ public abstract class BaseDbStorage : IStorage
         ConnectionFactory = Options.ConnectionFactory ?? DefaultConnectionFactory;
     }
 
-    #region disponse
+    #region Dispose
 
     public void Dispose()
     {
@@ -50,7 +50,7 @@ public abstract class BaseDbStorage : IStorage
     public bool Set(string key, string value, int millisecond)
     {
         ClearExpiredValues();
-        return UseConnection((connection) =>
+        return UseTransaction((connection, transaction) =>
         {
             var parameters = new
             {
@@ -59,15 +59,13 @@ public abstract class BaseDbStorage : IStorage
                 expireTime = DateTime.Now.AddMilliseconds(millisecond)
             };
 
-            return connection.Execute(SqlQueryProvider.GetInsertOrUpdateQuery(Options.SchemaName), parameters) > 0;
+            return connection.Execute(SqlQueryProvider.GetInsertOrUpdateQuery(Options.SchemaName), parameters, transaction) > 0;
         });
     }
 
     public bool SetNotExists(string key, string value, int millisecond)
     {
-        ClearExpiredValues();
-
-        return UseConnection((connection) =>
+        return UseTransaction((connection, transaction) =>
         {
             var parameters = new
             {
@@ -76,17 +74,17 @@ public abstract class BaseDbStorage : IStorage
                 expireTime = DateTime.Now.AddMilliseconds(millisecond)
             };
 
-            return connection.Execute(SqlQueryProvider.GetInsertIfNotExistsQuery(Options.SchemaName), parameters) > 0;
+            return connection.Execute(SqlQueryProvider.GetInsertIfNotExistsQuery(Options.SchemaName), parameters, transaction) > 0;
         });
     }
 
-    public bool Expire(string key, int millisecond)
+    public bool Expire(string key, string value, int millisecond)
     {
         return UseConnection((connection) =>
         {
             var parameters = new
             {
-                key,
+                key, value,
                 expireTime = DateTime.Now.AddMilliseconds(millisecond)
             };
 
@@ -94,13 +92,13 @@ public abstract class BaseDbStorage : IStorage
         });
     }
 
-    public Task<bool> ExpireAsync(string key, int millisecond)
+    public Task<bool> ExpireAsync(string key, string value, int millisecond)
     {
         return UseConnectionAsync(Func);
 
         async Task<bool> Func(DbConnection connection)
         {
-            var parameters = new { key, expireTime = DateTime.Now.AddMilliseconds(millisecond) };
+            var parameters = new { key, value, expireTime = DateTime.Now.AddMilliseconds(millisecond) };
 
             return await connection.ExecuteAsync(SqlQueryProvider.GetUpdateExpireQuery(Options.SchemaName), parameters) > 0;
         }

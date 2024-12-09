@@ -1,4 +1,6 @@
-﻿namespace SnowflakeId.AutoRegister.Tests.Base;
+﻿using System.Diagnostics;
+
+namespace SnowflakeId.AutoRegister.Tests.Base;
 
 public static class TestLog
 {
@@ -6,6 +8,17 @@ public static class TestLog
     {
         if (testOutputHelper is null) return default;
 
-        return (logLevel, message, exception) => { testOutputHelper.WriteLine($"{logLevel}: {message} {Environment.NewLine} {exception}"); };
+        return (logLevel, message, exception) =>
+        {
+            try
+            {
+                testOutputHelper.WriteLine($"[{Environment.CurrentManagedThreadId}]{logLevel}: {message} {Environment.NewLine} {exception}");
+            }
+            catch (Exception ex)
+            {
+                // Fallback to console or another logging mechanism
+                Trace.WriteLine($"Logging failed: {ex.Message}");
+            }
+        };
     }
 }

@@ -1,14 +1,13 @@
 ﻿namespace SnowflakeId.AutoRegister.Tests.Redis.Examples;
 
 [TestSubject(typeof(RedisStorage))]
-public class RedisAutoRegister : TestBaseAutoRegister
+public class RedisAutoRegister : TestBaseAutoRegister, IClassFixture<RedisFixture>
 {
-    private static readonly ConnectionMultiplexer _connection = ConnectionMultiplexer.Connect(ConnectionString);
-
-    public RedisAutoRegister(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+    public RedisAutoRegister(ITestOutputHelper testOutputHelper, RedisFixture redisFixture)
+        : base(testOutputHelper)
     {
         SetRegisterBuild = builder => builder
-           .UseRedisStore(option => { option.ConnectionMultiplexerFactory = () => _connection; });
+           .UseRedisStore(option => { option.ConnectionMultiplexerFactory = () => redisFixture.Connection; });
     }
 
     [Fact]

@@ -27,12 +27,12 @@ public class DefaultStore : IStorage
         return _store.TryAdd(key, value);
     }
 
-    public bool Expire(string key, int millisecond)
+    public bool Expire(string key, string value, int millisecond)
     {
         return true;
     }
 
-    public Task<bool> ExpireAsync(string key, int millisecond)
+    public Task<bool> ExpireAsync(string key, string value, int millisecond)
     {
         return Task.FromResult(true);
     }
@@ -42,7 +42,7 @@ public class DefaultStore : IStorage
         return _store.TryRemove(key, out _);
     }
 
-    #region disponse
+    #region Dispose
 
     public void Dispose()
     {

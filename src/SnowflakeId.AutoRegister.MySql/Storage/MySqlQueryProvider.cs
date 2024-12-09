@@ -17,16 +17,13 @@ public class MySqlQueryProvider : ISqlQueryProvider
 
     public string GetInsertIfNotExistsQuery(string schemaName) =>
         $"""
-        INSERT INTO `{schemaName}_RegisterKeyValues` (`Key`, `Value`, `ExpireTime`)
-        SELECT @key, @value, @expireTime
-        FROM DUAL
-        WHERE NOT EXISTS (
-            SELECT 1 FROM `{schemaName}_RegisterKeyValues` WHERE `Key` = @key
-        );
+        INSERT IGNORE INTO `{schemaName}_RegisterKeyValues` (`Key`, `Value`, `ExpireTime`)
+        VALUES (@key, @value, @expireTime);
         """;
 
+
     public string GetUpdateExpireQuery(string schemaName) =>
-        $"UPDATE `{schemaName}_RegisterKeyValues` SET `ExpireTime` = @expireTime WHERE `Key` = @key;";
+        $"UPDATE `{schemaName}_RegisterKeyValues` SET `ExpireTime` = @expireTime WHERE `Key` = @key AND `Value` = @value;";
 
     public string GetDeleteQuery(string schemaName) =>
         $"DELETE FROM `{schemaName}_RegisterKeyValues` WHERE `Key` = @key;";

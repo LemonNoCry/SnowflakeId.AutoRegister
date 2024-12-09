@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister</PackageTags>
-        <Version>1.0.3</Version>
+        <Version>1.0.4</Version>
         <Description>A C# library for automatic registration of WorkerId in SnowflakeId systems,supporting SQL Server, Redis , and other.
         </Description>
     </PropertyGroup>

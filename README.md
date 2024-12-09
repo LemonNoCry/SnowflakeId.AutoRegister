@@ -23,6 +23,7 @@ SnowflakeId AutoRegister 是一个库，提供了一种简单的方法在 Snowfl
 * 灵活配置：通过链式 API 自定义注册逻辑
 * 高兼容性：支持 .NET Standard 2.0，可在多种平台运行
 * 简化开发流程：减少手动维护 WorkerId 的复杂性
+* 高可靠性：支持 WorkerId 的自动续期，避免重复分配
 
 ---
 
@@ -120,7 +121,7 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     // 使用以下行使用 SQL Server 存储。
     //.UseSqlServerStore("Server=localhost;Database=SnowflakeTest;User Id=sa;Password=123456;")
                 
-    // Use the following line to use the MySQL store.
+    // 使用以下行使用 MySQL 存储。
     .UseMySqlStore("Server=localhost;Port=3306;Database=snowflaketest;Uid=test;Pwd=123456;SslMode=None;")
     
     .Build();
@@ -163,7 +164,7 @@ applicationLifetime.ApplicationStopping.Register(() =>
 
 ---
 
-## 集成其他 Snowflake ID 库
+## 集成 Snowflake ID 库
 
 ### Yitter.IdGenerator
 
@@ -180,22 +181,63 @@ long id = idGenInstance.NewLong();
 Console.WriteLine($"Id: {id}");
 ```
 
+## 高级用法
+
+### 托管`雪花Id工具库`生命周期
+
+将雪花Id工具库的生命周期托管到`AutoRegister`实例中，以避免`假死问题`。    
+**原理:进程A注册了WorkerId 1,但是进程A因为各种原因(如生命周期太短、网络问题等)
+导致无法及时续期,在其他进程看来此WorkerId已无效,进程B注册就会获得相同的WorkerId 1,在进程A恢复正常后,重新续期时会检测当前WorkId 1已被使用,会取消注册下次获取时会重新注册,**
+
+用法只需要调整`Build`。
+
+一下是`Yitter.IdGenerator` 的用法示例：
+
+```csharp
+//IAutoRegister => IAutoRegister<xxx>
+static readonly IAutoRegister<IIdGenerator> AutoRegister = new AutoRegisterBuilder()
+    
+    //与其他配置一样
+    ...
+    
+    //重点在于这里
+    .Build<IIdGenerator>(config => new DefaultIdGenerator(new IdGeneratorOptions()
+            {
+                WorkerId = (ushort)config.WorkerId
+            }));
+
+    //获取Id
+    //确保每次都要使用`GetIdGenerator()`来获取`IdGenerator`实例,不要缓存,因为可能会重新注册
+    long id =autoRegister.GetIdGenerator().NewLong();
+    Console.WriteLine($"Id: {id}");
+```
+
 ### 对于其他 Snowflake ID 生成库，可以参考上述示例进行集成。
 
 ---
 
 ## 常见问题 (FAQ)
 
+* Q: 为什么需要自动注册 WorkerId？
+* A: Snowflake ID 需要 WorkerId 来生成唯一的 ID。自动注册 WorkerId 可以减少手动维护的复杂性。
+
+
 * Q: 如果程序崩溃了，WorkerId 会被释放吗？
-* A: 不会。程序异常退出时，下次启动会尝试分配上一次的 WorkerId。如果失败，则重新注册新的 WorkerId。
+* A: 不会。WorkerId存在生命周期,程序异常退出时，下次启动会尝试注册上一次的 WorkerId。如果失败，则重新注册新的 WorkerId。
 
 
-* Q: 如何避免多进程重复分配 WorkerId？
+* Q: **"假死问题"是什么?**
+* A: **例如：进程A注册了WorkerId,但是进程A因为各种原因(如生命周期太短、网络问题等)
+  导致无法及时续期,在其他进程看来此WorkerId已无效,进程B注册就会获得相同的WorkerId,如果进程A恢复正常,此时进程A和进程B都会使用相同的WorkerId,导致ID重复
+  解决方案看[高级用法](#高级用法)**
+
+
+* Q: 如何避免同文件多进程重复分配 WorkerId？
 * A: 在 SetExtraIdentifier 中添加进程相关的标识符，例如当前进程 ID。
 
 
 * Q: 默认存储机制适合生产环境吗？
-* A: 默认存储机制仅适合开发和本地测试。在生产环境中，建议使用 Redis、SQL Server 或 MySQL 存储。
+* A: 默认存储机制仅适合开发和本地测试(为了保持一致性)。在生产环境中，建议使用 Redis、SQL Server、MySql等等。
 
 ---
 

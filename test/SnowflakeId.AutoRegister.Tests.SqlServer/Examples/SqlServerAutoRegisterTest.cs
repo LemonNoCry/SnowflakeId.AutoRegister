@@ -1,11 +1,12 @@
 ﻿namespace SnowflakeId.AutoRegister.Tests.SqlServer.Examples;
 
 [TestSubject(typeof(SqlServerStorage))]
-public class SqlServerAutoRegisterTest : TestBaseAutoRegister
+public class SqlServerAutoRegisterTest : TestBaseAutoRegister, IClassFixture<SqlServerFixture>
 {
-    public SqlServerAutoRegisterTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+    public SqlServerAutoRegisterTest(ITestOutputHelper testOutputHelper, SqlServerFixture sqlServerFixture) : base(testOutputHelper)
     {
         SetRegisterBuild = builder => builder.UseSqlServerStore(ConnectionString);
+        testOutputHelper.WriteLine("Count: " + sqlServerFixture.GetCount());
     }
 
     [Fact]

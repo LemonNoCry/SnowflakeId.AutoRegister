@@ -5,6 +5,16 @@
 /// </summary>
 internal class RedisStorage : IStorage
 {
+    /// <summary>
+    /// Lua script: Checks if the key's value matches the provided value and sets the expiration time
+    /// </summary>
+    private const string ExpireScript = @"
+        if redis.call('get', KEYS[1]) == ARGV[1] then
+            return redis.call('pexpire', KEYS[1], ARGV[2])
+        else
+            return 0
+        end";
+
     private readonly IConnectionMultiplexer _connection;
     private readonly RedisStorageOption _storageOption;
 
@@ -46,16 +56,30 @@ internal class RedisStorage : IStorage
         return db.StringSet(_storageOption.InstanceName + key, value, TimeSpan.FromMilliseconds(millisecond), When.NotExists);
     }
 
-    public bool Expire(string key, int millisecond)
+    public bool Expire(string key, string value, int millisecond)
     {
         var db = _connection.GetDatabase();
-        return db.KeyExpire(_storageOption.InstanceName + key, TimeSpan.FromMilliseconds(millisecond));
+        var redisKey = _storageOption.InstanceName + key;
+
+        var result = (int)db.ScriptEvaluate(
+            ExpireScript,
+            [redisKey],
+            [value, millisecond]);
+
+        return result == 1;
     }
 
-    public Task<bool> ExpireAsync(string key, int millisecond)
+    public async Task<bool> ExpireAsync(string key, string value, int millisecond)
     {
         var db = _connection.GetDatabase();
-        return db.KeyExpireAsync(_storageOption.InstanceName + key, TimeSpan.FromMilliseconds(millisecond));
+        var redisKey = _storageOption.InstanceName + key;
+
+        var result = (int)await db.ScriptEvaluateAsync(
+            ExpireScript,
+            [redisKey],
+            [value, millisecond]);
+
+        return result == 1;
     }
 
     public bool Delete(string key)
@@ -65,7 +89,7 @@ internal class RedisStorage : IStorage
     }
 
 
-    #region disponse
+    #region Dispose
 
     public void Dispose()
     {

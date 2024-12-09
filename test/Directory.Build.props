@@ -1,7 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
         <IsPackable>false</IsPackable>
-        <TargetFrameworks>net48;net6.0;</TargetFrameworks>
+        <TargetFrameworks>net6.0;</TargetFrameworks>
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>

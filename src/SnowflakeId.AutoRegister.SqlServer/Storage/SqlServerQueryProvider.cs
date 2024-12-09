@@ -10,7 +10,7 @@ public class SqlServerQueryProvider : ISqlQueryProvider
 
     public string GetInsertOrUpdateQuery(string schemaName) =>
         $"""
-        MERGE INTO [{schemaName}].[RegisterKeyValues] AS Target
+        MERGE INTO [{schemaName}].[RegisterKeyValues] WITH (HOLDLOCK, UPDLOCK) AS Target
         USING (VALUES (@key, @value, @expireTime)) AS Source ([Key], Value, ExpireTime)
         ON Target.[Key] = Source.[Key]
         WHEN MATCHED THEN 
@@ -23,11 +23,16 @@ public class SqlServerQueryProvider : ISqlQueryProvider
         $"""
         INSERT INTO [{schemaName}].[RegisterKeyValues] ([Key], Value, ExpireTime)
         SELECT @key, @value, @expireTime
-        WHERE NOT EXISTS (SELECT 1 FROM [{schemaName}].[RegisterKeyValues] WHERE [Key] = @key);
+        FROM (SELECT 1 AS tmp) AS t
+        WHERE NOT EXISTS (
+          SELECT 1 
+          FROM [{schemaName}].[RegisterKeyValues] WITH (UPDLOCK, HOLDLOCK) 
+          WHERE [Key] = @key
+        );
         """;
 
     public string GetUpdateExpireQuery(string schemaName) =>
-        $"UPDATE [{schemaName}].[RegisterKeyValues] SET ExpireTime = @expireTime WHERE [Key] = @key";
+        $"UPDATE [{schemaName}].[RegisterKeyValues] SET ExpireTime = @expireTime WHERE [Key] = @key AND [Value] = @value";
 
     public string GetDeleteQuery(string schemaName) =>
         $"DELETE FROM [{schemaName}].[RegisterKeyValues] WHERE [Key] = @key";

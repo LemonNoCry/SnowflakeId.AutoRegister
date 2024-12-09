@@ -34,6 +34,11 @@ public class AutoRegisterBuilder
 
     #endregion
 
+    /// <summary>
+    /// Builds an instance of IAutoRegister using the configured options and storage.
+    /// </summary>
+    /// <returns>An instance of IAutoRegister.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the storage is not set.</exception>
     public IAutoRegister Build()
     {
         if (_store is null) throw new ArgumentNullException(nameof(_store), "Please use UseDefaultStore or UseStore method to set the storage");
@@ -41,6 +46,23 @@ public class AutoRegisterBuilder
         _registerOption.Validate();
 
         return _registerFactory(_store, _registerOption);
+    }
+
+    /// <summary>
+    /// Build a SnowflakeId generator.
+    /// </summary>
+    /// <param name="registerBuild">A function to build the SnowflakeId generator.</param>
+    /// <typeparam name="T">The type of the SnowflakeId generator.</typeparam>
+    /// <returns>An instance of IAutoRegister&lt;T&gt;.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the storage or registerBuild function is null.</exception>
+    public IAutoRegister<T> Build<T>(Func<SnowflakeIdConfig, T> registerBuild) where T : class
+    {
+        if (_store is null) throw new ArgumentNullException(nameof(_store), "Please use UseDefaultStore or UseStore method to set the storage");
+        if (registerBuild is null) throw new ArgumentNullException(nameof(registerBuild), "Please provide a registerBuild function");
+
+        _registerOption.Validate();
+
+        return new IdGeneratorAutoRegister<T>(_store, _registerOption, registerBuild);
     }
 
     #region Storage

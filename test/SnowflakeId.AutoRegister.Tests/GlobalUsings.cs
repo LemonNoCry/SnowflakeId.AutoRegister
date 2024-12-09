@@ -10,6 +10,7 @@ global using SnowflakeId.AutoRegister.Configs;
 global using SnowflakeId.AutoRegister.Core;
 global using SnowflakeId.AutoRegister.Interfaces;
 global using SnowflakeId.AutoRegister.Logging;
+global using SnowflakeId.AutoRegister.Tests.Base;
 global using SnowflakeId.AutoRegister.Util;
 global using Xunit;
 global using Xunit.Abstractions;

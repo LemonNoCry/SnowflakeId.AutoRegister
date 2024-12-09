@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageTags>Snowflake;SnowflakeId;AutoRegister;Id AutoRegister;SqlServer</PackageTags>
-        <Version>1.0.4</Version>
+        <Version>1.0.5</Version>
         <Description>SnowflakeId AutoRegister StackExchangeRedis: An extension of the SnowflakeId AutoRegister library, enabling automatic WorkerId registration in SnowflakeId systems using SqlServer
         </Description>
     </PropertyGroup>

@@ -5,13 +5,16 @@
 /// </summary>
 public interface IStorage : IDisposable
 {
+    /// <summary>
+    /// Checks if the specified key exists in the storage.
+    /// </summary>
     bool Exist(string key);
 
     /// <summary>
-    /// Gets the value associated with the specified key.
+    /// Retrieves the value associated with the specified key.
     /// </summary>
-    /// <param name="key">The key of the value to get.</param>
-    /// <returns>The value associated with the specified key, if the key is found; otherwise, <see langword="null"/>.</returns>
+    /// <param name="key">The key whose associated value is to be retrieved.</param>
+    /// <returns>The value associated with the specified key, or <see langword="null"/> if the key is not found.</returns>
     string? Get(string key);
 
     /// <summary>
@@ -31,18 +34,20 @@ public interface IStorage : IDisposable
     bool SetNotExists(string key, string value, int millisecond);
 
     /// <summary>
-    /// Sets the time to live in milliseconds of the specified key.
+    /// Sets the time to live in milliseconds for the specified key.
     /// </summary>
     /// <param name="key">The key of the value to expire.</param>
+    /// <param name="value">The value associated with the key.</param>
     /// <param name="millisecond">The life of the value in milliseconds.</param>
-    bool Expire(string key, int millisecond);
+    bool Expire(string key, string value, int millisecond);
 
     /// <summary>
-    /// Sets the time to live in milliseconds of the specified key.
+    /// Sets the time to live in milliseconds for the specified key asynchronously.
     /// </summary>
     /// <param name="key">The key of the value to expire.</param>
+    /// <param name="value">The value associated with the key.</param>
     /// <param name="millisecond">The life of the value in milliseconds.</param>
-    Task<bool> ExpireAsync(string key, int millisecond);
+    Task<bool> ExpireAsync(string key, string value, int millisecond);
 
     /// <summary>
     /// Deletes the specified key.

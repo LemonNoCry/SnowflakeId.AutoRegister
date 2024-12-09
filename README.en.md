@@ -19,6 +19,7 @@ registration, making it compatible with any framework or library using Snowflake
 - **Flexible configuration**: Chainable API to customize registration logic.
 - **High compatibility**: Supports .NET Standard 2.0, allowing cross-platform usage.
 - **Simplifies development**: Reduces complexity in managing WorkerId for distributed systems.
+- **High reliability**: Supports automatic renewal of WorkerId to prevent duplicate assignments.
 
 ---
 
@@ -173,22 +174,66 @@ long id = idGenInstance.NewLong();
 Console.WriteLine($"Generated ID: {id}");
 ```
 
-For other Snowflake ID libraries, follow a similar approach to pass the WorkerId obtained from
-`SnowflakeId.AutoRegister`.
+## AdvancedUsage
+
+### Managing the Lifecycle of `Snowflake ID Tool Library`
+
+Delegate the lifecycle of the Snowflake ID tool library to the `AutoRegister` instance to avoid the "zombie problem".    
+**Principle: Process A registers WorkerId 1, but due to various reasons (such as a short lifecycle, network issues, etc.), it cannot renew in time. In other processes, this
+WorkerId is considered invalid, and process B will register the same WorkerId 1. When process A recovers, it will detect that WorkerId 1 is already in use and will cancel the
+registration, re-registering the next time it is acquired.**
+
+Usage only requires adjusting `Build`.
+
+Here is an example of using `Yitter.IdGenerator`:
+
+```csharp
+//IAutoRegister => IAutoRegister<xxx>
+static readonly IAutoRegister<IIdGenerator> AutoRegister = new AutoRegisterBuilder()
+    
+    // Same as other configurations
+    ...
+    
+    // The key point is here
+    .Build<IIdGenerator>(config => new DefaultIdGenerator(new IdGeneratorOptions()
+            {
+                WorkerId = (ushort)config.WorkerId
+            }));
+
+    //Get Id
+    // Ensure to use `GetIdGenerator()` to get the `IdGenerator` instance each time, do not cache it, as it may re-register
+    long id =autoRegister.GetIdGenerator().NewLong();
+    Console.WriteLine($"Id: {id}");
+```
+
+### For other Snowflake ID generation libraries, refer to the above examples for integration.
 
 ---
 
 ## FAQ
 
-- **What happens if the program crashes?**  
-  WorkerId will not be released. On the next startup, the library attempts to reuse the previous WorkerId. If
-  unsuccessful, a new WorkerId is assigned.
+* Q: Why do we need to auto-register WorkerId?
+* A: Snowflake ID requires WorkerId to generate unique IDs. Auto-registering WorkerId can reduce the complexity of manual maintenance.
 
-- **How to prevent duplicate WorkerId across processes?**  
-  Use `SetExtraIdentifier` with process-specific data, such as the current process ID.
 
-- **Is the default storage mechanism suitable for production?**  
-  No, it is recommended only for development and testing. Use Redis, SQL Server, or MySQL for production environments.
+* Q: Will WorkerId be released if the program crashes?
+* A: No. WorkerId has a lifecycle. If the program exits abnormally, it will try to register the previous WorkerId on the next startup. If it fails, it will re-register a new
+  WorkerId.
+
+
+* Q: **What is the "zombie problem"?**
+* A: **For example, process A registers a WorkerId, but due to various reasons (such as a short lifecycle, network issues, etc.), it cannot renew in time. In other processes, this
+  WorkerId is considered invalid, and process B will register the same WorkerId. If process A recovers, both process A and process B will use the same WorkerId, causing ID
+  duplication. See [Advanced Usage](#AdvancedUsage) for the solution.**
+
+
+* Q: How to avoid multiple processes in the same file from being assigned the same WorkerId?
+* A: Add a process-related identifier in SetExtraIdentifier, such as the current process ID.
+
+
+* Q: Is the default storage mechanism suitable for production environments?
+* A: The default storage mechanism is only suitable for development and local testing (to maintain consistency). In production environments, it is recommended to use Redis, SQL
+  Server, MySQL, etc.
 
 ---
 

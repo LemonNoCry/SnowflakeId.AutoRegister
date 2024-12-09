@@ -7,7 +7,6 @@ namespace SnowflakeId.AutoRegister.Core;
 /// </summary>
 internal class DefaultAutoRegister : IAutoRegister
 {
-    internal const string WorkerIdKeyPrefix = "WorkerId:{0}";
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     public readonly string Identifier;
     protected readonly SnowflakeIdRegisterOption RegisterOption;
@@ -34,9 +33,9 @@ internal class DefaultAutoRegister : IAutoRegister
     /// <returns>The registered Snowflake ID configuration.</returns>
     public virtual SnowflakeIdConfig Register()
     {
-        _semaphore.Wait();
         try
         {
+            _semaphore.Wait();
             if (SnowflakeIdConfig != null) return SnowflakeIdConfig;
 
             SnowflakeIdConfig = new SnowflakeIdConfig
@@ -50,7 +49,7 @@ internal class DefaultAutoRegister : IAutoRegister
                     cancellationToken => ExtendLifeTimeOperation(SnowflakeIdConfig, cancellationToken));
             ExtendLifeTimeTask.Start();
 
-            LogManager.Instance.LogInfo($"Register WorkerId:{SnowflakeIdConfig.WorkerId}");
+            LogManager.Instance.LogInfo($"Register Success: WorkerId:{SnowflakeIdConfig.WorkerId}");
             return SnowflakeIdConfig;
         }
         finally
@@ -64,9 +63,9 @@ internal class DefaultAutoRegister : IAutoRegister
     /// </summary>
     public virtual void UnRegister()
     {
-        _semaphore.Wait();
         try
         {
+            _semaphore.Wait();
             if (SnowflakeIdConfig == null) return;
 
             // First stop the task, then delete the cache
@@ -74,9 +73,10 @@ internal class DefaultAutoRegister : IAutoRegister
             ExtendLifeTimeTask?.Stop();
             ExtendLifeTimeTask = null;
 
-            Clear(SnowflakeIdConfig);
+            Storage.Delete(AppConst.WorkerIdFormat(SnowflakeIdConfig.WorkerId));
+            Storage.Delete(Identifier);
 
-            LogManager.Instance.LogInfo($"UnRegister WorkerId:{SnowflakeIdConfig.WorkerId}");
+            LogManager.Instance.LogInfo($"UnRegister WorkerId:{SnowflakeIdConfig.WorkerId} Identifier:{Identifier}");
             SnowflakeIdConfig = null;
         }
         finally
@@ -85,7 +85,25 @@ internal class DefaultAutoRegister : IAutoRegister
         }
     }
 
-    protected internal string WorkerIdFormat(long workerId) => string.Format(WorkerIdKeyPrefix, workerId);
+    /// <summary>
+    /// Resets the current Snowflake ID.
+    /// </summary>
+    protected virtual void Reset()
+    {
+        if (SnowflakeIdConfig == null) return;
+
+        // First stop the task, then delete the cache
+        // Avoid extending the time again in the task after deleting the Cache first
+        ExtendLifeTimeTask?.Stop();
+        ExtendLifeTimeTask = null;
+
+        Storage.Delete(Identifier);
+
+        LogManager.Instance.LogInfo($"Reset WorkerId:{SnowflakeIdConfig.WorkerId} Identifier:{Identifier}");
+        SnowflakeIdConfig = null;
+    }
+
+    #region WorkerId operation
 
     /// <summary>
     /// Run long time task. Extend the WorkerId life cycle
@@ -95,15 +113,14 @@ internal class DefaultAutoRegister : IAutoRegister
     /// <param name="cancellationToken"></param>
     private async Task ExtendLifeTimeOperation(SnowflakeIdConfig config, CancellationToken cancellationToken)
     {
-        // To prevent tasks from executing during logout
-        await _semaphore.WaitAsync(cancellationToken);
-
         try
         {
+            // To prevent tasks from executing during logout
+            await _semaphore.WaitAsync(cancellationToken);
+
             // The task has been canceled, preventing further execution
             if (cancellationToken.IsCancellationRequested)
             {
-                Clear(config);
                 LogManager.Instance.LogInfo($"Extend WorkerId:{config.WorkerId} Identifier:{Identifier} canceled");
                 return;
             }
@@ -111,22 +128,23 @@ internal class DefaultAutoRegister : IAutoRegister
             LogManager.Instance.LogInfo($"Start extend WorkerId:{config.WorkerId} Identifier:{Identifier} ");
 
             // Extend the life of the WorkerId
-            var key = WorkerIdFormat(config.WorkerId);
+            var key = AppConst.WorkerIdFormat(config.WorkerId);
 
-            var flag = await Storage.ExpireAsync(key, RegisterOption.WorkerIdLifeMillisecond);
+            // Try to extend the life of the WorkerId
+            var flag = await Storage.ExpireAsync(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
             if (!flag)
             {
-                LogManager.Instance.LogWarn($"Extend WorkerId:{config.WorkerId} Identifier:{Identifier} failed,The WorkerId has expired");
+                LogManager.Instance.LogWarn($"""
+                                Extend WorkerId:{config.WorkerId} Identifier:{Identifier} failed.
+                                The WorkerId may expired, try to reset
+                                """);
                 // In theory, you shouldn't go here
                 // If the WorkerId is not found in the cache, it means that the WorkerId has expired.
                 // Try to re-register the WorkerId
                 flag = Storage.SetNotExists(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
                 if (!flag)
                 {
-                    LogManager.Instance.LogFatal($"Extend WorkerId:{config.WorkerId} Identifier:{Identifier
-                    } failed,Cannot be renewed and cannot be reset");
-
-                    // TODO Renewal failed, try to re-register the WorkerId
+                    ExtendFailedOperation(config);
                     return;
                 }
             }
@@ -147,6 +165,19 @@ internal class DefaultAutoRegister : IAutoRegister
     }
 
     /// <summary>
+    /// The operation to be performed when the extension fails.
+    /// </summary>
+    /// <param name="config"></param>
+    protected virtual void ExtendFailedOperation(SnowflakeIdConfig config)
+    {
+        LogManager.Instance.LogError($"""
+                        Extend WorkerId:{config.WorkerId} Identifier:{Identifier} failed.
+                        Cannot be expire and cannot be reset, UnRegister the WorkerId and next time will be re-registered
+                        """);
+        Reset();
+    }
+
+    /// <summary>
     /// Gets the next available worker ID.
     /// </summary>
     /// <returns>The next available worker ID.</returns>
@@ -161,7 +192,7 @@ internal class DefaultAutoRegister : IAutoRegister
         if (!string.IsNullOrEmpty(workerIdStr) && int.TryParse(workerIdStr, out var usedWorkerId))
         {
             LogManager.Instance.LogDebug($"Get last WorkerId:{workerIdStr}");
-            var key = WorkerIdFormat(usedWorkerId);
+            var key = AppConst.WorkerIdFormat(usedWorkerId);
 
             // Valid WorkerId owned by the current process
             var value = Storage.Get(key);
@@ -169,7 +200,7 @@ internal class DefaultAutoRegister : IAutoRegister
             {
                 LogManager.Instance.LogDebug("The WorkerId is still valid");
                 // Extend the life of the WorkerId
-                var flag = Storage.Expire(key, RegisterOption.WorkerIdLifeMillisecond);
+                var flag = Storage.Expire(key, Identifier, RegisterOption.WorkerIdLifeMillisecond);
                 if (flag)
                 {
                     LogManager.Instance.LogDebug("Extend WorkerId life success");
@@ -203,7 +234,7 @@ internal class DefaultAutoRegister : IAutoRegister
             for (var workerId = RegisterOption.MinWorkerId; workerId <= RegisterOption.MaxWorkerId; workerId++)
             {
                 LogManager.Instance.LogTrace($"Try to get WorkerId:{workerId}");
-                var key = WorkerIdFormat(workerId);
+                var key = AppConst.WorkerIdFormat(workerId);
                 if (Storage.Exist(key))
                 {
                     LogManager.Instance.LogTrace($"{key} already exists");
@@ -233,27 +264,16 @@ internal class DefaultAutoRegister : IAutoRegister
         throw new InvalidOperationException("No available worker id.");
     }
 
-    /// <summary>
-    /// Clear resources for the specified configuration.
-    /// </summary>
-    /// <param name="config"></param>
-    private void Clear(SnowflakeIdConfig? config)
-    {
-        if (config is null) return;
+    #endregion
 
-        var key = WorkerIdFormat(config.WorkerId);
-        Storage.Delete(key);
-        Storage.Delete(Identifier);
-        LogManager.Instance.LogInfo($"Cleaned up resources for WorkerId:{config.WorkerId} Identifier:{Identifier}");
-    }
-
-    #region disponse
+    #region Dispose
 
     protected virtual void Dispose(bool disposing)
     {
         if (disposing)
         {
             UnRegister();
+            Storage.Dispose();
         }
     }
 
@@ -261,6 +281,11 @@ internal class DefaultAutoRegister : IAutoRegister
     {
         Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    ~DefaultAutoRegister()
+    {
+        Dispose(false);
     }
 
     #endregion

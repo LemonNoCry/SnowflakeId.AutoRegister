@@ -1,11 +1,19 @@
 ﻿namespace SnowflakeId.AutoRegister.Tests.Base;
 
+[Collection("Non-Parallel Collection")]
+[TestSubject(typeof(IStorage))]
+[TestSubject(typeof(IAutoRegister))]
+[TestSubject(typeof(AutoRegisterBuilder))]
 public class TestBaseAutoRegister
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
     protected TestBaseAutoRegister(ITestOutputHelper testOutputHelper)
     {
+        _testOutputHelper = testOutputHelper;
         SetRegisterBuild = builder => builder;
         LogAction = testOutputHelper.GetLogAction();
+        _testOutputHelper.WriteLine($"Current Test: [{Environment.CurrentManagedThreadId}]");
     }
 
     protected Func<AutoRegisterBuilder, AutoRegisterBuilder> SetRegisterBuild { get; set; }
@@ -49,10 +57,10 @@ public class TestBaseAutoRegister
         var getValue = storage.Get(key);
         Assert.Equal(value, getValue);
 
-        var expire = storage.Expire(key, millisecond * 10);
+        var expire = storage.Expire(key, value, millisecond * 10);
         Assert.True(expire);
 
-        expire = await storage.ExpireAsync(key, millisecond * 10);
+        expire = await storage.ExpireAsync(key, value, millisecond * 10);
         Assert.True(expire);
 
         var delete = storage.Delete(key);
@@ -103,10 +111,22 @@ public class TestBaseAutoRegister
             Assert.NotEqual(0, workerId);
         }
 
-        // dispose all
+        Assert.NotNull(storage);
+
+        // Unregister all
         foreach (var register in registers)
         {
-            register.Dispose();
+            register.UnRegister();
+        }
+
+        foreach (var task in tasks)
+        {
+            //Wait for the WorkerId to be deleted
+            while (storage.Exist(AppConst.WorkerIdFormat(task.Result.WorkerId)))
+            {
+                _testOutputHelper.WriteLine("[Test_MultipleConcurrentRegistrations] Wait for WorkerId to expire");
+                Thread.Sleep(101);
+            }
         }
 
         // check all keys are expired
@@ -115,6 +135,9 @@ public class TestBaseAutoRegister
             var flag = storage?.Exist($@"WorkerId:{task.Result.WorkerId}");
             Assert.False(flag);
         }
+
+        // dispose all
+        foreach (var register in registers) register.Dispose();
     }
 
     protected virtual void Test_WorkerId_Own()
@@ -160,7 +183,7 @@ public class TestBaseAutoRegister
         var identifier = storage?.Get("WorkerId:" + idConfig.WorkerId);
         Assert.Equal(idConfig.Identifier, identifier);
 
-        // Sleep for a while to expire the worker id
+        // Sleep for a while, is it expired?
         Thread.Sleep(901);
 
         // Get the worker id
@@ -178,7 +201,7 @@ public class TestBaseAutoRegister
     protected virtual void Test_WorkerId_Own_Scramble()
     {
         var builder = GetAutoRegisterBuilder()
-           .SetWorkerIdLifeMillisecond(9000)
+           .SetWorkerIdLifeMillisecond(900)
            .SetExtraIdentifier(GetType().FullName + nameof(Test_WorkerId_Own_Scramble) + "1");
         var storage = builder.Storage;
         Assert.NotNull(storage);
@@ -189,18 +212,21 @@ public class TestBaseAutoRegister
         Assert.NotEqual(0, idConfig.WorkerId);
         Assert.NotEmpty(idConfig.Identifier);
 
-        Assert.True(storage.Exist(register.WorkerIdFormat(idConfig.WorkerId)));
+        Assert.True(storage.Exist(AppConst.WorkerIdFormat(idConfig.WorkerId)));
         Assert.True(storage.Exist(idConfig.Identifier));
 
         //Actively delete key,Simulate fake death problem
         Assert.NotNull(register.ExtendLifeTimeTask);
         register.ExtendLifeTimeTask.Stop();
 
-        storage.Delete(register.WorkerIdFormat(idConfig.WorkerId));
-        storage.Delete(register.Identifier);
+        while (storage.Exist(AppConst.WorkerIdFormat(idConfig.WorkerId)))
+        {
+            _testOutputHelper.WriteLine("[Test_WorkerId_Own_Scramble] Wait for WorkerId to expire");
+            Thread.Sleep(301);
+        }
 
         var builder2 = GetAutoRegisterBuilder()
-           .SetWorkerIdLifeMillisecond(9000)
+           .SetWorkerIdLifeMillisecond(900)
            .SetExtraIdentifier(GetType().FullName + nameof(Test_WorkerId_Own_Scramble) + "2");
         using var register2 = (DefaultAutoRegister)GetAutoRegister(builder2);
         var idConfig2 = register2.Register();
@@ -218,10 +244,14 @@ public class TestBaseAutoRegister
         Assert.NotNull(register2.ExtendLifeTimeTask);
         register.ExtendLifeTimeTask.Start();
 
-        Thread.Sleep(300);
+        while (storage.Exist(idConfig.Identifier))
+        {
+            _testOutputHelper.WriteLine("Wait for Process 1 to reset");
+            Thread.Sleep(100);
+        }
 
         // Because process 1 starts to recover, WorkId is still held by process 2, and process 1 also marks that it also has WorkId
-        Assert.True(storage.Exist(idConfig.Identifier));
-        Assert.Equal(idConfig2.Identifier, storage.Get(register.WorkerIdFormat(idConfig2.WorkerId)));
+        Assert.False(storage.Exist(idConfig.Identifier));
+        Assert.Equal(idConfig2.Identifier, storage.Get(AppConst.WorkerIdFormat(idConfig2.WorkerId)));
     }
 }
