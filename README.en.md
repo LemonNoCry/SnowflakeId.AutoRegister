@@ -276,6 +276,16 @@ dotnet build
 
 ---
 
+## 💕 Donation (捐赠)
+
+Alipay:  
+<img src="https://github.com/LemonNoCry/SnowflakeId.AutoRegister/blog/master/resource/alipay.jpg" width="300" />
+
+Wechat:  
+<img src="https://github.com/LemonNoCry/SnowflakeId.AutoRegister/blog/master/resource/alipay.jpg" width="300" />
+
+---
+
 ## License
 
 This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
