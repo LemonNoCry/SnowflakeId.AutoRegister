@@ -279,10 +279,10 @@ dotnet build
 ## 💕 Donation (捐赠)
 
 Alipay:  
-<img src="https://github.com/LemonNoCry/SnowflakeId.AutoRegister/blog/master/resource/alipay.jpg" width="300" />
+<img src="https://github.com/LemonNoCry/SnowflakeId.AutoRegister/blob/master/resource/alipay.jpg?raw=true" width="300" />
 
 Wechat:  
-<img src="https://github.com/LemonNoCry/SnowflakeId.AutoRegister/blog/master/resource/alipay.jpg" width="300" />
+<img src="https://github.com/LemonNoCry/SnowflakeId.AutoRegister/blob/master/resource/wechat.jpg?raw=true" width="300" />
 
 ---
 
