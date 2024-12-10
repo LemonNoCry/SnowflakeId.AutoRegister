@@ -1,10 +1,10 @@
 ﻿using SnowflakeId.AutoRegister.Builder;
 using SnowflakeId.AutoRegister.Interfaces;
-using SnowflakeId.AutoRegister.Logging;
+using Yitter.IdGenerator;
 
-namespace Yitter.IdGenerator.AutoRegister;
+namespace SnowflakeId.AutoRegister.Benchmark;
 
-public static class IdGeneratorUtil
+public class AutoRegisterIdGeneratorUtil
 {
     /// <summary>
     /// Singleton instance.
@@ -21,8 +21,8 @@ public static class IdGeneratorUtil
             //.SetExtraIdentifier(Environment.CurrentDirectory + Process.GetCurrentProcess().Id)
 
             // Set the log output.
-           .SetLogMinimumLevel(LogLevel.Debug)
-           .SetLogger((level, message, ex) => Console.WriteLine($"[{DateTime.Now}] [{level}] {message} {ex}"))
+            // .SetLogMinimumLevel(LogLevel.Debug)
+            // .SetLogger((level, message, ex) => Console.WriteLine($"[{DateTime.Now}] [{level}] {message} {ex}"))
 
             // Use the following line to set the WorkerId scope.
            .SetWorkerIdScope(1, 31)
@@ -62,5 +62,20 @@ public static class IdGeneratorUtil
     public static long NextId()
     {
         return IdGenInstance.NewLong();
+    }
+}
+
+public class IdGeneratorUtil
+{
+    private static readonly Lazy<IIdGenerator> _idGenerator = new(() => new DefaultIdGenerator(new IdGeneratorOptions
+    {
+        WorkerId = 1
+    }));
+
+    private static IIdGenerator IdGenerator => _idGenerator.Value;
+
+    public static long NextId()
+    {
+        return IdGenerator.NewLong();
     }
 }

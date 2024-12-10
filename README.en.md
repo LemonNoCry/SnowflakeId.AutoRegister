@@ -45,51 +45,55 @@ Install-Package SnowflakeId.AutoRegister
 
 ### Optional Storage Support
 
-#### Redis
+* #### Redis
 
-```bash
-Install-Package SnowflakeId.AutoRegister.Redis
-```
+  ```bash
+  Install-Package SnowflakeId.AutoRegister.Redis
+  ```
 
-#### SQL Server
+* #### SQL Server
 
-```bash
-Install-Package SnowflakeId.AutoRegister.SqlServer
-```
+  ```bash
+  Install-Package SnowflakeId.AutoRegister.SqlServer
+  ```
 
-**Note**: You must manually install the SQL Server driver if not already available:
+  **Note**: You must manually install the SQL Server driver if not already available:
 
-```bash
-Install-Package Microsoft.Data.SqlClient
-```
+  ```bash
+  Install-Package Microsoft.Data.SqlClient
+  ```
 
-or
+  or
 
-```bash
-Install-Package System.Data.SqlClient
-```
+  ```bash
+  Install-Package System.Data.SqlClient
+  ```
 
-#### MySQL
+* #### MySQL
 
-```bash
-Install-Package SnowflakeId.AutoRegister.MySql
-```
+  ```bash
+  Install-Package SnowflakeId.AutoRegister.MySql
+  ```
 
-**Note**: You must manually install the MySQL driver if not already available:
+  **Note**: You must manually install the MySQL driver if not already available:
 
-```bash
-Install-Package MySql.Data
-```
+  ```bash
+  Install-Package MySql.Data
+  ```
 
-or
+  or
 
-```bash
-Install-Package MySqlConnector
-```
+  ```bash
+  Install-Package MySqlConnector
+  ```
 
 ---
 
 ## Quick Start
+
+### 使用 `IAutoRegister<T>' (推荐)
+
+Refer to [Advanced Usage](#AdvancedUsage)
 
 ### Initialize `AutoRegister`
 
@@ -124,7 +128,7 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     .Build();
 ```
 
-### Register WorkerId
+#### Register WorkerId
 
 Retrieve the WorkerId configuration using the `Register` method:
 
@@ -133,7 +137,7 @@ SnowflakeIdConfig config = AutoRegister.Register();
 Console.WriteLine($"WorkerId: {config.WorkerId}");
 ```
 
-### Unregister WorkerId on Exit
+#### Unregister WorkerId on Exit
 
 Unregister WorkerId to release resources when the application exits:
 
@@ -207,6 +211,31 @@ static readonly IAutoRegister<IIdGenerator> AutoRegister = new AutoRegisterBuild
 ```
 
 ### For other Snowflake ID generation libraries, refer to the above examples for integration.
+---
+
+## Performance
+
+Comparing the performance of using `AutoRegister` to manage the lifecycle of `Yitter.IdGenerator` versus directly using `Yitter.IdGenerator` to generate IDs.
+
+```
+
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.2314)
+Intel Core i5-10400 CPU 2.90GHz, 1 CPU, 12 logical and 6 physical cores
+.NET SDK 9.0.100
+  [Host]   : .NET 6.0.33 (6.0.3324.36610), X64 RyuJIT AVX2
+  .NET 6.0 : .NET 6.0.33 (6.0.3324.36610), X64 RyuJIT AVX2
+  .NET 8.0 : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+
+
+
+| Method                          | Job      | Runtime  |     Mean |     Error |    StdDev |   Median | Allocated |
+|---------------------------------|----------|----------|---------:|----------:|----------:|---------:|----------:|
+| IdGeneratorUtil_100             | .NET 6.0 | .NET 6.0 | 1.697 ms | 0.2230 ms | 0.6575 ms | 1.951 ms |       1 B |
+| AutoRegisterIdGeneratorUtil_100 | .NET 6.0 | .NET 6.0 | 1.697 ms | 0.2228 ms | 0.6568 ms | 1.950 ms |       1 B |
+| IdGeneratorUtil_100             | .NET 8.0 | .NET 8.0 | 1.697 ms | 0.2230 ms | 0.6575 ms | 1.951 ms |       1 B |
+| AutoRegisterIdGeneratorUtil_100 | .NET 8.0 | .NET 8.0 | 1.698 ms | 0.2228 ms | 0.6570 ms | 1.951 ms |       1 B |
+
+```
 
 ---
 

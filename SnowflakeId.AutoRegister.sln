@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Db
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Tests.MySql", "test\SnowflakeId.AutoRegister.Tests.MySql\SnowflakeId.AutoRegister.Tests.MySql.csproj", "{3EE18F2C-20A5-474E-9B8D-B1BE0029644E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Benchmark", "SnowflakeId.AutoRegister.Benchmark\SnowflakeId.AutoRegister.Benchmark.csproj", "{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{3EE18F2C-20A5-474E-9B8D-B1BE0029644E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EE18F2C-20A5-474E-9B8D-B1BE0029644E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EE18F2C-20A5-474E-9B8D-B1BE0029644E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{379A07C8-D3D6-4B54-976A-CD964283AD6E} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
@@ -115,5 +121,6 @@ Global
 		{F8C6CD47-A2E1-428F-A34D-6B9D56FFFD54} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
 		{FF951FF2-A070-41EF-8B87-B80B9480FE3F} = {80C12689-8B1F-4738-9D7C-180DF84D0DC4}
 		{3EE18F2C-20A5-474E-9B8D-B1BE0029644E} = {32DD7F02-1B46-43B3-A869-4877C8D8EC73}
+		{97A3B45E-26B2-4BC9-959D-F6A713B17E6F} = {97ACBBF1-EB80-4C34-8483-BF78B89B94EB}
 	EndGlobalSection
 EndGlobal

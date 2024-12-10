@@ -78,7 +78,8 @@ Install-Package SnowflakeId.AutoRegister
   Install-Package MySql.Data
   ```
   或
-* ```bash
+
+  ```bash
   Install-Package MySqlConnector
   ```
 
@@ -88,7 +89,11 @@ Install-Package SnowflakeId.AutoRegister
 
 以下是使用 SnowflakeId.AutoRegister 的基本示例
 
-### 初始化 `AutoRegister` 实例
+### 使用 `IAutoRegister<T>' (推荐)
+
+参考[高级用法](#高级用法)
+
+### 使用 `IAutoRegister`
 
 使用 `AutoRegisterBuilder` 构建一个单例实例：
 
@@ -127,7 +132,7 @@ static readonly IAutoRegister AutoRegister = new AutoRegisterBuilder()
     .Build();
 ```
 
-### 注册 WorkerId
+#### 注册 WorkerId
 
 通过 `AutoRegister` 实例获取 `WorkerId` 配置：
 
@@ -137,7 +142,7 @@ SnowflakeIdConfig config = AutoRegister.Register();
 Console.WriteLine($"WorkerId: {config.WorkerId}");
 ```
 
-### 程序退出时注销 WorkerId
+#### 程序退出时注销 WorkerId
 
 在程序退出时，主动注销 WorkerId，确保资源释放：
 
@@ -213,6 +218,32 @@ static readonly IAutoRegister<IIdGenerator> AutoRegister = new AutoRegisterBuild
 ```
 
 ### 对于其他 Snowflake ID 生成库，可以参考上述示例进行集成。
+
+---
+
+## 基准测试
+
+使用`AutoRegister`托管`Yitter.IdGenerator`的生命周期，与直接使用`Yitter.IdGenerator`生成Id的性能对比。
+
+```
+
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.2314)
+Intel Core i5-10400 CPU 2.90GHz, 1 CPU, 12 logical and 6 physical cores
+.NET SDK 9.0.100
+  [Host]   : .NET 6.0.33 (6.0.3324.36610), X64 RyuJIT AVX2
+  .NET 6.0 : .NET 6.0.33 (6.0.3324.36610), X64 RyuJIT AVX2
+  .NET 8.0 : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+
+
+
+| Method                          | Job      | Runtime  |     Mean |     Error |    StdDev |   Median | Allocated |
+|---------------------------------|----------|----------|---------:|----------:|----------:|---------:|----------:|
+| IdGeneratorUtil_100             | .NET 6.0 | .NET 6.0 | 1.697 ms | 0.2230 ms | 0.6575 ms | 1.951 ms |       1 B |
+| AutoRegisterIdGeneratorUtil_100 | .NET 6.0 | .NET 6.0 | 1.697 ms | 0.2228 ms | 0.6568 ms | 1.950 ms |       1 B |
+| IdGeneratorUtil_100             | .NET 8.0 | .NET 8.0 | 1.697 ms | 0.2230 ms | 0.6575 ms | 1.951 ms |       1 B |
+| AutoRegisterIdGeneratorUtil_100 | .NET 8.0 | .NET 8.0 | 1.698 ms | 0.2228 ms | 0.6570 ms | 1.951 ms |       1 B |
+
+```
 
 ---
 
