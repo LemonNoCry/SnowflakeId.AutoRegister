@@ -91,7 +91,7 @@ Install-Package SnowflakeId.AutoRegister
 
 ## Quick Start
 
-### 使用 `IAutoRegister<T>' (推荐)
+### Use `IAutoRegister<T>` (Recommended)
 
 Refer to [Advanced Usage](#AdvancedUsage)
 

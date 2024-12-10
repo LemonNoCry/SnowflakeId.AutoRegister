@@ -89,7 +89,7 @@ Install-Package SnowflakeId.AutoRegister
 
 以下是使用 SnowflakeId.AutoRegister 的基本示例
 
-### 使用 `IAutoRegister<T>' (推荐)
+### 使用 `IAutoRegister<>' (推荐)
 
 参考[高级用法](#高级用法)
 
