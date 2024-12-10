@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\SnowflakeId.AutoRegister.Db\SnowflakeId.AutoRegister.Db.csproj"/>
-        <ProjectReference Include="..\src\SnowflakeId.AutoRegister.MySql\SnowflakeId.AutoRegister.MySql.csproj"/>
-        <ProjectReference Include="..\src\SnowflakeId.AutoRegister.SqlServer\SnowflakeId.AutoRegister.SqlServer.csproj"/>
-        <ProjectReference Include="..\src\SnowflakeId.AutoRegister.StackExchangeRedis\SnowflakeId.AutoRegister.StackExchangeRedis.csproj"/>
-        <ProjectReference Include="..\src\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj"/>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister.Db\SnowflakeId.AutoRegister.Db.csproj"/>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister.MySql\SnowflakeId.AutoRegister.MySql.csproj"/>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister.SqlServer\SnowflakeId.AutoRegister.SqlServer.csproj"/>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister.StackExchangeRedis\SnowflakeId.AutoRegister.StackExchangeRedis.csproj"/>
+        <ProjectReference Include="..\..\src\SnowflakeId.AutoRegister\SnowflakeId.AutoRegister.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

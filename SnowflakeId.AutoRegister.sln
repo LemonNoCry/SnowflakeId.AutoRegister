@@ -47,7 +47,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Db
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Tests.MySql", "test\SnowflakeId.AutoRegister.Tests.MySql\SnowflakeId.AutoRegister.Tests.MySql.csproj", "{3EE18F2C-20A5-474E-9B8D-B1BE0029644E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Benchmark", "SnowflakeId.AutoRegister.Benchmark\SnowflakeId.AutoRegister.Benchmark.csproj", "{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowflakeId.AutoRegister.Benchmark", "examples\SnowflakeId.AutoRegister.Benchmark\SnowflakeId.AutoRegister.Benchmark.csproj", "{97A3B45E-26B2-4BC9-959D-F6A713B17E6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
